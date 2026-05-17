@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="LeadFlow">
+<meta name="theme-color" content="#F4F7FA">
+<title>LeadFlow PRO</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  :root{
+    --bg:#F4F7FA;--card:#FFFFFF;--acc:#00BF80;--acc-soft:rgba(0,191,128,.10);
+    --acc-2:#7B5CFA;--text:#080F1A;--sub:#6B7280;--dim:#B0B8C4;
+    --border:rgba(0,0,0,.07);--red:#E84040;--amber:#E8950A;
+    --card-r:18px;
+    --font:-apple-system,'SF Pro Display','Helvetica Neue',sans-serif;
+    --mono:'SF Mono','Fira Code','Menlo',monospace;
+    --safe-top:env(safe-area-inset-top,0px);
+    --safe-bot:env(safe-area-inset-bottom,0px);
+  }
+  html,body{height:100%;overflow:hidden;}
+  body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;}
+  button,select,input,textarea{font-family:var(--font);outline:none;-webkit-appearance:none;}
+  select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px!important;}
+  ::-webkit-scrollbar{display:none;}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.8)}}
+  @keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
+  .anim{animation:slideUp .22s ease both;}
+  .live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--acc);animation:pulse 2s infinite;}
+  #app{display:flex;flex-direction:column;height:100vh;height:100dvh;}
+  #header{background:rgba(244,247,250,.96);border-bottom:.5px solid var(--border);padding:calc(var(--safe-top) + 12px) 16px 0;flex-shrink:0;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+  #header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+  .logo{font-size:20px;font-weight:900;letter-spacing:-1px;line-height:1;}
+  .logo-acc{color:var(--acc);}
+  .logo-tag{font-size:10px;font-weight:700;color:var(--dim);margin-left:6px;letter-spacing:1px;vertical-align:middle;}
+  #tabs{display:flex;gap:0;}
+  .tab{flex:1;padding:8px 4px 10px;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;color:var(--dim);font-size:10px;font-weight:500;letter-spacing:.5px;display:flex;flex-direction:column;align-items:center;gap:2px;transition:color .15s,border-color .15s;}
+  .tab.active{color:var(--acc);border-bottom-color:var(--acc);font-weight:800;}
+  .tab-icon{font-size:16px;}
+  #content{flex:1;overflow-y:auto;padding:16px 16px calc(var(--safe-bot) + 16px);-webkit-overflow-scrolling:touch;}
+  /* Cards */
+  .card{background:var(--card);border-radius:var(--card-r);border:.5px solid var(--border);margin-bottom:10px;overflow:hidden;}
+  .card-p{padding:14px 16px;}
+  /* Stats row */
+  .stat-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:14px;}
+  .stat{background:var(--card);border-radius:14px;border:.5px solid var(--border);padding:12px 8px;text-align:center;}
+  .stat-num{font-family:var(--mono);font-size:22px;font-weight:800;letter-spacing:-1.5px;line-height:1;}
+  .stat-lbl{font-size:9px;font-weight:700;color:var(--dim);letter-spacing:.8px;margin-top:3px;}
+  /* Lead card */
+  .lead-card{background:var(--card);border-radius:var(--card-r);border:.5px solid var(--border);margin-bottom:10px;overflow:hidden;}
+  .lead-header{padding:13px 15px;cursor:pointer;}
+  .lead-name{font-size:14px;font-weight:700;letter-spacing:-.3px;margin-bottom:5px;}
+  .lead-meta{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:7px;}
+  .lead-snip{font-size:12px;color:var(--sub);font-style:italic;line-height:1.4;margin-bottom:5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+  .lead-src{font-size:11px;color:var(--dim);}
+  .lead-score-num{font-family:var(--mono);font-size:22px;font-weight:800;letter-spacing:-1.5px;line-height:1;}
+  .score-bar-bg{width:40px;height:3px;border-radius:2px;background:#EAECF0;overflow:hidden;margin-top:4px;margin-left:auto;}
+  .score-bar-fill{height:100%;border-radius:2px;}
+  .lead-detail{border-top:.5px solid var(--border);padding:13px 15px;background:rgba(0,0,0,.015);}
+  .detail-contact{font-size:13px;margin-bottom:4px;}
+  .detail-src{font-size:11px;color:var(--dim);margin-bottom:10px;}
+  /* Badges */
+  .badge{display:inline-flex;align-items:center;gap:3px;padding:2px 9px;border-radius:100px;font-size:11px;font-weight:600;}
+  .status-btns{display:flex;gap:6px;flex-wrap:wrap;}
+  .status-btn{padding:6px 11px;border-radius:100px;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;}
+  /* Buttons */
+  .btn{padding:12px 20px;border-radius:14px;border:none;cursor:pointer;font-size:13px;font-weight:700;font-family:var(--font);transition:opacity .15s;}
+  .btn:active{opacity:.8;}
+  .btn-primary{background:var(--acc);color:#fff;}
+  .btn-ghost{background:var(--card);border:.5px solid var(--border);color:var(--text);}
+  .btn-row{display:flex;gap:8px;margin-bottom:16px;}
+  .btn-row .btn-primary{flex:1;}
+  /* Filter chips */
+  .chips{display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;padding-bottom:4px;}
+  .chip{padding:7px 14px;border-radius:100px;border:.5px solid var(--border);background:transparent;color:var(--sub);font-size:12px;font-weight:600;cursor:pointer;flex-shrink:0;white-space:nowrap;font-family:var(--font);transition:all .15s;}
+  /* Fix cards */
+  .fix-card{border-radius:14px;padding:12px 14px;margin-bottom:8px;}
+  .fix-status-badge{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:100px;font-size:10px;font-weight:700;flex-shrink:0;}
+  /* Source rows */
+  .source-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:.5px solid var(--border);}
+  .source-row:last-child{border-bottom:none;}
+  /* Toggle */
+  .toggle{width:44px;height:24px;border-radius:12px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
+  .toggle-thumb{position:absolute;top:2px;width:20px;height:20px;border-radius:10px;background:#fff;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+  /* Inputs */
+  .inp{width:100%;padding:11px 12px;border-radius:10px;border:.5px solid var(--border);font-size:14px;font-family:var(--font);background:#fff;color:var(--text);}
+  .inp:focus{border-color:var(--acc);}
+  .sel{width:100%;padding:11px 12px;border-radius:10px;border:.5px solid var(--border);font-size:13px;font-family:var(--font);background:#fff;color:var(--text);}
+  textarea.inp{resize:vertical;font-size:13px;line-height:1.5;}
+  .field-lbl{font-size:11px;color:var(--sub);font-weight:600;margin-bottom:4px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+  /* Sheet */
+  #sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:999;display:none;align-items:flex-end;}
+  #sheet-bg.open{display:flex;}
+  #sheet{background:var(--card);border-radius:22px 22px 0 0;width:100%;max-height:88vh;overflow-y:auto;padding:0 16px calc(var(--safe-bot) + 32px);}
+  .sheet-handle{width:36px;height:4px;border-radius:2px;background:var(--border);margin:12px auto 16px;}
+  .sheet-title{font-size:17px;font-weight:800;letter-spacing:-.5px;margin-bottom:16px;}
+  /* Section label */
+  .sec-lbl{font-size:10px;font-weight:700;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;margin-top:16px;}
+  /* TG banner */
+  .tg-banner{display:flex;gap:6px;align-items:center;padding:8px 12px;background:rgba(34,158,217,.07);border-radius:10px;border:.5px solid rgba(34,158,217,.15);margin-bottom:14px;}
+  /* Live banner */
+  .live-banner{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:12px;border:.5px solid rgba(0,191,128,.15);margin-bottom:14px;background:rgba(0,191,128,.04);position:relative;overflow:hidden;}
+  .live-banner::after{content:'';position:absolute;top:0;left:0;width:35%;height:100%;background:linear-gradient(90deg,transparent,rgba(0,191,128,.1),transparent);animation:shimmer 2.8s ease-in-out infinite;}
+  .live-label{display:flex;align-items:center;gap:8px;}
+  .live-text{font-size:11px;font-weight:700;color:var(--acc);letter-spacing:1px;}
+  .live-sub{font-size:11px;color:var(--dim);}
+  .clock{font-family:var(--mono);font-size:11px;color:var(--sub);}
+  /* Code block */
+  .code{background:#0D1117;border-radius:10px;padding:12px 14px;font-family:var(--mono);font-size:11px;color:#7ecb99;line-height:1.9;}
+  /* Health grid */
+  .health-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}
+  .health-card{border-radius:14px;padding:12px 10px;text-align:center;border:.5px solid;}
+  .health-num{font-family:var(--mono);font-size:20px;font-weight:800;letter-spacing:-1px;}
+  .health-new{font-size:10px;font-weight:600;margin-top:3px;}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="header">
+    <div id="header-top">
+      <div>
+        <div class="logo">Lead<span class="logo-acc">Flow</span><span class="logo-tag">PRO</span></div>
+        <div style="font-size:11px;color:var(--dim);margin-top:1px;">Cade's Scanner · SoCal</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span class="live-dot"></span>
+        <span class="clock" id="clock"></span>
+      </div>
+    </div>
+    <div id="tabs">
+      <button class="tab active" data-tab="feed"><span class="tab-icon">⚡</span>Feed</button>
+      <button class="tab" data-tab="leads"><span class="tab-icon">👥</span>Leads</button>
+      <button class="tab" data-tab="scanner"><span class="tab-icon">📡</span>Scanner</button>
+      <button class="tab" data-tab="config"><span class="tab-icon">⚙️</span>Config</button>
+    </div>
+  </div>
+  <div id="content"></div>
+</div>
+
+<!-- Add Lead Sheet -->
+<div id="sheet-bg">
+  <div id="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">New Lead</div>
+    <div class="grid2">
+      <div><div class="field-lbl">Name *</div><input class="inp" id="f-name" placeholder="Jane Smith"></div>
+      <div><div class="field-lbl">Industry</div>
+        <select class="sel" id="f-ind">
+          <option value="pest">🐛 Pest Control</option>
+          <option value="solar">☀️ Solar</option>
+          <option value="poker">🃏 Poker</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid2">
+      <div><div class="field-lbl">Phone</div><input class="inp" id="f-phone" placeholder="+1 555 000 0000" type="tel"></div>
+      <div><div class="field-lbl">Score (0-100)</div><input class="inp" id="f-score" placeholder="Auto" type="number" min="0" max="100"></div>
+    </div>
+    <div class="grid2">
+      <div><div class="field-lbl">Source</div>
+        <select class="sel" id="f-src">
+          <option>Reddit r/homeowners</option>
+          <option>Reddit r/pestcontrol</option>
+          <option>Reddit r/solar</option>
+          <option>Reddit r/onlinepoker</option>
+          <option>Reddit r/poker</option>
+          <option>Craigslist OC</option>
+          <option>Telegram</option>
+          <option>Referral</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div><div class="field-lbl">Status</div>
+        <select class="sel" id="f-st">
+          <option value="new">New</option>
+          <option value="contacted">Contacted</option>
+          <option value="qualified">Qualified</option>
+          <option value="closed">Closed</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-bottom:18px;">
+      <div class="field-lbl">Their exact quote / post snippet</div>
+      <textarea class="inp" id="f-snip" rows="3" placeholder='"Copy their actual words here..."'></textarea>
+    </div>
+    <button class="btn btn-primary" style="width:100%;padding:14px;font-size:15px;" onclick="addLead()">Add Lead</button>
+  </div>
+</div>
+
+<script>
+// ── Config ─────────────────────────────────────────────────
+const GRP = '-1003814127256';
+const IND = {
+  pest:{label:'Pest Control',emoji:'🐛',color:'#00BF80',soft:'rgba(0,191,128,.1)',dark:'#006644'},
+  solar:{label:'Solar',emoji:'☀️',color:'#E8950A',soft:'rgba(232,149,10,.1)',dark:'#7A4500'},
+  poker:{label:'Poker',emoji:'🃏',color:'#7B5CFA',soft:'rgba(123,92,250,.1)',dark:'#3A1FA8'},
+};
+const STATUS_C = {
+  new:['#E8F1FB','#185FA5'],contacted:['#FEF6E4','#9A6B00'],
+  qualified:['#E2FBF2','#006644'],closed:['#F0F0F2','#888'],
+};
+const FIXES = [
+  {ok:true,title:'Apartment amenity false positives',before:'"Monthly Pest Service" in apartment listings → fake pest leads',after:'Requires intent: "roach problem","infestation","how to get rid of..."',impact:'−96% noise'},
+  {ok:true,title:'Homes with solar triggered as leads',before:'"FULL SOLAR/TESLA BATTERY" for-sale listings → fake solar leads',after:'Intent keywords: "want solar","solar quote","high electric bill"',impact:'High-intent only'},
+  {ok:true,title:'2+2 Forums → 403 Forbidden',before:'All 3 forum URLs blocked by bot detection, 0 results',after:'Reddit API: r/poker, r/onlinepoker, r/gambling — live ✓',impact:'Source restored'},
+  {ok:true,title:'Telegram 429 rate-limit burst',before:'20+ messages sent at once → API throttled, messages dropped',after:'1.2s queue delay + exponential backoff on 429 retry',impact:'0 dropped msgs'},
+  {ok:false,title:'No organic pest posts on Craigslist',before:'People don\'t post "I have roaches" on Craigslist',after:'Add Reddit r/pestcontrol + r/homeowners to scanner.js',impact:'↑ Lead quality'},
+];
+const SOURCES = [
+  {n:'Reddit r/pestcontrol',ind:'pest',st:'active',leads:8,rate:'~3/day'},
+  {n:'Reddit r/homeowners',ind:'pest',st:'active',leads:14,rate:'~5/day'},
+  {n:'Reddit r/solar',ind:'solar',st:'active',leads:11,rate:'~4/day'},
+  {n:'Reddit r/onlinepoker',ind:'poker',st:'active',leads:9,rate:'~3/day'},
+  {n:'Reddit r/poker',ind:'poker',st:'active',leads:7,rate:'~2/day'},
+  {n:'Craigslist OC/SoCal',ind:'solar',st:'active',leads:4,rate:'~1/day'},
+  {n:'2+2 Forums',ind:'poker',st:'error',leads:0,rate:'403 blocked'},
+];
+const AR_DEF = {
+  pest:{on:true,delay:'30s',msg:"🐛 Hi {name}! We saw you're dealing with a pest issue. Our team serves your area and offers free same-week inspections. Want to book yours? 📅"},
+  solar:{on:true,delay:'30s',msg:"☀️ Hey {name}, saw you're thinking about solar! We can show you exactly how much you'd save in under 2 minutes. Want a free custom estimate?"},
+  poker:{on:false,delay:'5min',msg:"🃏 Hey {name}! We run private weekly games — clean, competitive, real money. Want an invite to the next session?"},
+};
+
+// ── State ──────────────────────────────────────────────────
+let leads = [], ar = JSON.parse(JSON.stringify(AR_DEF)), tgSent = 14;
+let activity = [], filterInd = 'all', expanded = null, currentTab = 'feed';
+
+function uid(){return Math.random().toString(36).slice(2,9);}
+function rel(ts){const d=Date.now()-ts;if(d<60000)return'just now';if(d<3600000)return Math.round(d/60000)+'m ago';if(d<86400000)return Math.round(d/3600000)+'h ago';return Math.round(d/86400000)+'d ago';}
+function scCol(s){return s>=80?'#00BF80':s>=60?'#E8950A':'#B0B8C4';}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function seed(){
+  const n=Date.now();
+  return[
+    {id:'s1',name:'Marcus R.',phone:'+1 602-555-0183',email:'marcus@gmail.com',ind:'pest',src:'Reddit r/homeowners',st:'qualified',score:87,snip:'"Roaches taking over my kitchen — tried everything, nothing works"',added:n-7200000},
+    {id:'s2',name:'Jenna Cole',phone:'+1 480-555-0247',email:'jenna@outlook.com',ind:'solar',src:'Reddit r/solar',st:'new',score:93,snip:'"SCE bill hit $480 this month, seriously thinking about going solar"',added:n-3600000},
+    {id:'s3',name:'Derek T.',phone:'+1 702-555-0311',email:'',ind:'poker',src:'Reddit r/onlinepoker',st:'contacted',score:67,snip:'"Looking for real money online poker app that actually works in CA"',added:n-14400000},
+    {id:'s4',name:'Amanda S.',phone:'',email:'',ind:'pest',src:'Reddit r/pestcontrol',st:'new',score:79,snip:'"Ant infestation in backyard, now coming inside the house"',added:n-1800000},
+    {id:'s5',name:'Roy C.',phone:'+1 480-555-0588',email:'royc@gmail.com',ind:'solar',src:'Craigslist OC',st:'closed',score:95,snip:'"Need solar quote ASAP, Edison bill is absolutely killing me"',added:n-86400000},
+    {id:'s6',name:'Tiffany W.',phone:'+1 702-555-0632',email:'tiff@icloud.com',ind:'poker',src:'Reddit r/gambling',st:'new',score:61,snip:'"Best poker app to play from home? Not trying to go to a casino"',added:n-2700000},
+  ];
+}
+
+// ── Storage ────────────────────────────────────────────────
+function save(){
+  try{localStorage.setItem('lf-leads',JSON.stringify(leads));}catch(e){}
+  try{localStorage.setItem('lf-ar',JSON.stringify(ar));}catch(e){}
+  try{localStorage.setItem('lf-activity',JSON.stringify(activity.slice(0,60)));}catch(e){}
+  try{localStorage.setItem('lf-tg',String(tgSent));}catch(e){}
+}
+function load(){
+  try{const d=localStorage.getItem('lf-leads');leads=d?JSON.parse(d):seed();}catch(e){leads=seed();}
+  try{const d=localStorage.getItem('lf-ar');if(d)ar=JSON.parse(d);}catch(e){}
+  try{const d=localStorage.getItem('lf-activity');if(d)activity=JSON.parse(d);}catch(e){}
+  try{const d=localStorage.getItem('lf-tg');if(d)tgSent=parseInt(d)||14;}catch(e){}
+}
+
+function addActivity(text,type){
+  activity.unshift({id:uid(),text,type,time:Date.now()});
+  activity=activity.slice(0,60);
+}
+
+// ── Clock ──────────────────────────────────────────────────
+setInterval(()=>{
+  const el=document.getElementById('clock');
+  if(el)el.textContent=new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+},1000);
+(function(){const el=document.getElementById('clock');if(el)el.textContent=new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});})();
+
+// ── Render Helpers ─────────────────────────────────────────
+function badge(ind){const i=IND[ind];return `<span class="badge" style="background:${i.soft};color:${i.dark}">${i.emoji} ${i.label}</span>`;}
+function statusBadge(s){const[bg,tc]=STATUS_C[s]||['#eee','#888'];return `<span class="badge" style="background:${bg};color:${tc}">${s}</span>`;}
+function scoreBar(s){return `<div style="width:40px;height:3px;border-radius:2px;background:#EAECF0;overflow:hidden;margin-top:4px;margin-left:auto;"><div style="width:${s}%;height:100%;border-radius:2px;background:${scCol(s)};"></div></div>`;}
+
+function renderLeadCard(l){
+  const ex=expanded===l.id;
+  const i=IND[l.ind];
+  const detail=ex?`
+    <div class="lead-detail anim">
+      ${l.phone?`<div class="detail-contact">📱 ${esc(l.phone)}</div>`:''}
+      ${l.email?`<div class="detail-contact">✉ ${esc(l.email)}</div>`:''}
+      <div class="detail-src">${esc(l.src)}</div>
+      <div class="status-btns">
+        ${['new','contacted','qualified','closed'].map(s=>{
+          const [bg,tc]=STATUS_C[s];
+          const active=l.st===s;
+          return `<button class="status-btn" onclick="updateSt('${l.id}','${s}')" style="border:.5px solid ${active?i.color:'var(--border)'};background:${active?i.soft:'transparent'};color:${active?i.dark:'var(--sub)'};">${s}</button>`;
+        }).join('')}
+      </div>
+    </div>`:'';}
+  return `<div class="lead-card" style="border-left:3px solid ${i.color};">
+    <div class="lead-header" onclick="toggleExpand('${l.id}')">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+        <div style="flex:1;min-width:0;">
+          <div class="lead-name">${esc(l.name)}</div>
+          <div class="lead-meta">${badge(l.ind)}${statusBadge(l.st)}</div>
+          ${l.snip?`<div class="lead-snip">${esc(l.snip)}</div>`:''}
+          <div class="lead-src">${esc(l.src)} · ${rel(l.added)}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <div class="lead-score-num" style="color:${scCol(l.score)};">${l.score}</div>
+          ${scoreBar(l.score)}
+          <div style="font-size:10px;color:var(--dim);margin-top:3px;">${ex?'▲':'▼'}</div>
+        </div>
+      </div>
+    </div>
+    ${detail}
+  </div>`;
+}
+
+// ── Tab: Feed ──────────────────────────────────────────────
+function renderFeed(){
+  const s={total:leads.length,nw:leads.filter(l=>l.st==='new').length,hot:leads.filter(l=>l.st==='qualified').length,avg:leads.length?Math.round(leads.reduce((a,l)=>a+l.score,0)/leads.length):0};
+  const recentLeads=[...leads].sort((a,b)=>b.added-a.added).slice(0,8);
+  return `
+    <div class="live-banner">
+      <div class="live-label">
+        <span class="live-dot"></span>
+        <span class="live-text">SCANNER LIVE</span>
+        <span class="live-sub">30 min cycle</span>
+      </div>
+      <span style="font-size:11px;color:var(--dim);">scanner.js</span>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><div class="stat-num" style="color:var(--text);">${s.total}</div><div class="stat-lbl">TOTAL</div></div>
+      <div class="stat"><div class="stat-num" style="color:var(--acc);">${s.nw}</div><div class="stat-lbl">NEW</div></div>
+      <div class="stat"><div class="stat-num" style="color:var(--amber);">${s.hot}</div><div class="stat-lbl">HOT</div></div>
+      <div class="stat"><div class="stat-num" style="color:var(--acc-2);">${s.avg}</div><div class="stat-lbl">AVG</div></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="openSheet()">+ Add Lead</button>
+      <button class="btn btn-ghost" onclick="simulateScan()">⚡ Simulate</button>
+    </div>
+    <div class="tg-banner">
+      <span style="font-size:16px;">✈️</span>
+      <span style="font-size:12px;color:#185FA5;"><b>${tgSent}</b> sent → Group <span style="font-family:var(--mono);font-size:11px;">${GRP}</span></span>
+    </div>
+    ${recentLeads.map(renderLeadCard).join('')}
+    ${activity.length?`
+      <div class="sec-lbl" style="margin-top:8px;">Recent Activity</div>
+      ${activity.slice(0,6).map(a=>`
+        <div style="display:flex;gap:9px;padding:7px 0;border-bottom:.5px solid var(--border);">
+          <div style="width:6px;height:6px;border-radius:3px;margin-top:5px;flex-shrink:0;background:${a.type==='success'?'var(--acc)':a.type==='telegram'?'#229ED9':a.type==='scan'?'var(--amber)':'var(--dim)'}"></div>
+          <div>
+            <div style="font-size:12px;line-height:1.4;">${esc(a.text)}</div>
+            <div style="font-size:10px;color:var(--dim);margin-top:1px;">${rel(a.time)}</div>
+          </div>
+        </div>`).join('')}
+    `:''}`;
+}
+
+// ── Tab: Leads ─────────────────────────────────────────────
+function renderLeads(){
+  const fl=filterInd==='all'?leads:leads.filter(l=>l.ind===filterInd);
+  return `
+    <div class="chips">
+      ${['all','pest','solar','poker'].map(f=>{
+        const active=filterInd===f;
+        const col=f==='all'?'var(--acc)':(IND[f]?.color||'var(--acc)');
+        const soft=f==='all'?'var(--acc-soft)':(IND[f]?.soft||'var(--acc-soft)');
+        const dark=f==='all'?'var(--acc)':(IND[f]?.dark||'var(--acc)');
+        return `<button class="chip" onclick="setFilter('${f}')" style="${active?`border-color:${col};background:${soft};color:${dark};font-weight:700;`:''}">
+          ${f==='all'?'All Leads':IND[f].emoji+' '+IND[f].label}
+        </button>`;
+      }).join('')}
+    </div>
+    <div style="font-size:11px;color:var(--dim);margin-bottom:10px;">${fl.length} leads</div>
+    ${fl.length?[...fl].sort((a,b)=>b.added-a.added).map(renderLeadCard).join(''):'<div style="text-align:center;color:var(--dim);padding:50px 0;font-size:14px;">No leads in this category.</div>'}`;
+}
+
+// ── Tab: Scanner ───────────────────────────────────────────
+function renderScanner(){
+  return `
+    <div class="card card-p">
+      <div class="sec-lbl" style="margin-top:0;">Bot Config</div>
+      ${[['Bot Token','8616974859:AAGh•••••••••••'],['Group ID',GRP],['Scanner','~/Desktop/bug-leads/scanner.js'],['Rate Limit','1.2s queue · backoff on 429'],['Status','● Connected']].map(([k,v])=>`
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:.5px solid var(--border);">
+          <span style="font-size:11px;color:var(--sub);flex-shrink:0;">${k}</span>
+          <span style="font-family:var(--mono);font-size:11px;color:${k==='Status'?'var(--acc)':'var(--text)'};text-align:right;margin-left:10px;word-break:break-all;">${esc(v)}</span>
+        </div>`).join('')}
+    </div>
+    <div class="health-grid">
+      ${Object.entries(IND).map(([key,i])=>{
+        const cnt=leads.filter(l=>l.ind===key).length;
+        const nw=leads.filter(l=>l.ind===key&&l.st==='new').length;
+        return `<div class="health-card" style="background:${i.soft};border-color:${i.color}33;">
+          <div style="font-size:22px;margin-bottom:4px;">${i.emoji}</div>
+          <div class="health-num" style="color:${i.dark};">${cnt}</div>
+          ${nw?`<div class="health-new" style="color:${i.color};">${nw} new</div>`:'<div class="health-new" style="color:var(--dim);">—</div>'}
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="sec-lbl">Bugs Fixed & Improvements</div>
+    ${FIXES.map(f=>`
+      <div class="fix-card" style="background:var(--card);border:.5px solid ${f.ok?'rgba(0,191,128,.25)':'rgba(232,149,10,.25)'};">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;">
+          <div style="font-size:12px;font-weight:700;line-height:1.4;flex:1;">${esc(f.title)}</div>
+          <span class="fix-status-badge" style="background:${f.ok?'rgba(0,191,128,.1)':'rgba(232,149,10,.1)'};color:${f.ok?'var(--acc)':'var(--amber)'};">${f.ok?'✓ Fixed':'⚠ Todo'}</span>
+        </div>
+        <div style="font-size:11px;color:var(--dim);margin-bottom:3px;"><b>Before:</b> ${esc(f.before)}</div>
+        <div style="font-size:11px;color:${f.ok?'#006644':'var(--amber)'}"><b>Fix:</b> ${esc(f.after)}</div>
+        ${f.impact?`<div style="font-size:10px;font-weight:700;color:var(--dim);margin-top:4px;">${f.impact}</div>`:''}
+      </div>`).join('')}
+    <div class="sec-lbl">Sources</div>
+    <div class="card" style="padding:4px 16px;">
+      ${SOURCES.map((s,i)=>`
+        <div class="source-row" ${i===SOURCES.length-1?'style="border-bottom:none;"':''}>
+          <div>
+            <div style="font-size:13px;font-weight:500;">${esc(s.n)}</div>
+            <div style="font-size:11px;color:var(--dim);margin-top:1px;">${s.rate} · ${IND[s.ind].emoji} ${IND[s.ind].label}</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:11px;font-weight:700;font-family:var(--mono);color:${s.st==='active'?'var(--acc)':s.st==='error'?'var(--red)':'var(--dim)'};">${s.st==='active'?'● LIVE':s.st==='error'?'✕ ERR':'○ IDLE'}</div>
+            <div style="font-size:10px;color:var(--dim);margin-top:1px;">${s.leads} leads</div>
+          </div>
+        </div>`).join('')}
+    </div>`;
+}
+
+// ── Tab: Config ────────────────────────────────────────────
+function renderConfig(){
+  return `
+    <div class="sec-lbl" style="margin-top:0;">Auto-Responders · Telegram Bot</div>
+    ${Object.entries(ar).map(([ind,cfg])=>{
+      const i=IND[ind];
+      return `<div class="card card-p">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:22px;">${i.emoji}</span>
+            <div>
+              <div style="font-size:13px;font-weight:700;">${i.label}</div>
+              <div style="font-size:11px;color:var(--dim);">${cfg.on?`Delay: ${cfg.delay}`:'Disabled'}</div>
+            </div>
+          </div>
+          <div class="toggle" style="background:${cfg.on?'var(--acc)':'#D1D5DB'};" onclick="toggleAr('${ind}')">
+            <div class="toggle-thumb" style="left:${cfg.on?22:2}px;"></div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--sub);margin-bottom:6px;">${cfg.on?'✓ Auto-sending on new leads':'⏸ Tap toggle to enable'}</div>
+        <textarea class="inp" rows="4" ${cfg.on?'':'disabled'} style="opacity:${cfg.on?1:.6};" onchange="updateArMsg('${ind}',this.value)">${esc(cfg.msg)}</textarea>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px;">{name} = first name &nbsp;·&nbsp; Group: <span style="font-family:var(--mono);">${GRP}</span></div>
+      </div>`;
+    }).join('')}
+    <div class="sec-lbl">Scanner Push Endpoint</div>
+    <div class="card card-p">
+      <div style="font-size:12px;color:var(--sub);margin-bottom:8px;">Add to scanner.js after sendTelegram():</div>
+      <div class="code">
+        <div style="color:#888;">// Rate-limited queue (1.2s delay)</div>
+        <div style="color:#9cdcfe;">await queue.add(() => fetch('/api/lead', {</div>
+        <div style="padding-left:16px;color:#ce9178;">  method: 'POST',</div>
+        <div style="padding-left:16px;color:#ce9178;">  body: JSON.stringify({</div>
+        <div style="padding-left:32px;color:#ce9178;">    name, phone, industry,</div>
+        <div style="padding-left:32px;color:#ce9178;">    source, score, snippet</div>
+        <div style="padding-left:16px;color:#ce9178;">  })</div>
+        <div style="color:#9cdcfe;">}));</div>
+        <div style="color:#888;margin-top:4px;">// Retries on 429 with backoff</div>
+      </div>
+    </div>`;
+}
+
+// ── Actions ─────────────────────────────────────────────────
+function toggleExpand(id){expanded=expanded===id?null:id;render();}
+function setFilter(f){filterInd=f;render();}
+function toggleAr(ind){ar[ind].on=!ar[ind].on;save();render();}
+function updateArMsg(ind,msg){ar[ind].msg=msg;save();}
+function updateSt(id,st){
+  const l=leads.find(x=>x.id===id);
+  leads=leads.map(x=>x.id===id?{...x,st}:x);
+  addActivity(`${l?.name} → ${st}`,'update');
+  save();render();
+}
+function openSheet(){document.getElementById('sheet-bg').classList.add('open');}
+function closeSheet(){document.getElementById('sheet-bg').classList.remove('open');}
+
+function addLead(){
+  const name=document.getElementById('f-name').value.trim();
+  if(!name)return;
+  const ind=document.getElementById('f-ind').value;
+  const l={
+    id:uid(),name,
+    phone:document.getElementById('f-phone').value.trim(),
+    email:'',
+    ind,
+    src:document.getElementById('f-src').value,
+    st:document.getElementById('f-st').value,
+    score:parseInt(document.getElementById('f-score').value)||Math.floor(Math.random()*30+60),
+    snip:document.getElementById('f-snip').value.trim(),
+    added:Date.now(),
+  };
+  leads.unshift(l);
+  addActivity(`New lead: ${l.name} (${IND[l.ind].label}) score ${l.score}`,'success');
+  if(ar[l.ind]?.on){tgSent++;addActivity(`Auto-responder queued → ${GRP}`,'telegram');}
+  save();closeSheet();render();
+  document.getElementById('f-name').value='';document.getElementById('f-phone').value='';
+  document.getElementById('f-score').value='';document.getElementById('f-snip').value='';
+}
+
+function simulateScan(){
+  const opts=[
+    {name:'r/homeowners user',ind:'pest',src:'Reddit r/homeowners',score:74,snip:'"Spider problem getting really bad upstairs, need an exterminator"'},
+    {name:'r/solar commenter',ind:'solar',src:'Reddit r/solar',score:89,snip:'"Is solar actually worth it in SoCal? My Edison bill is insane"'},
+    {name:'r/onlinepoker user',ind:'poker',src:'Reddit r/onlinepoker',score:65,snip:'"Best real money poker app in California 2025?"'},
+    {name:'r/pestcontrol user',ind:'pest',src:'Reddit r/pestcontrol',score:82,snip:'"Confirmed bed bug infestation — need professional help ASAP"'},
+  ];
+  const p=opts[Math.floor(Math.random()*opts.length)];
+  const l={id:uid(),...p,phone:'',email:'',st:'new',added:Date.now()};
+  leads.unshift(l);
+  addActivity(`Scanner: ${l.snip.slice(1,45)}... (${IND[l.ind].label})`,'scan');
+  if(ar[l.ind]?.on){tgSent++;addActivity(`Auto-responder queued → ${GRP}`,'telegram');}
+  save();render();
+}
+
+// ── Router & Render ─────────────────────────────────────────
+function render(){
+  const content=document.getElementById('content');
+  if(currentTab==='feed')content.innerHTML=renderFeed();
+  else if(currentTab==='leads')content.innerHTML=renderLeads();
+  else if(currentTab==='scanner')content.innerHTML=renderScanner();
+  else content.innerHTML=renderConfig();
+}
+
+document.getElementById('tabs').addEventListener('click',e=>{
+  const btn=e.target.closest('.tab');
+  if(!btn)return;
+  currentTab=btn.dataset.tab;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  expanded=null;
+  render();
+});
+
+document.getElementById('sheet-bg').addEventListener('click',e=>{
+  if(e.target===document.getElementById('sheet-bg'))closeSheet();
+});
+
+// ── Boot ───────────────────────────────────────────────────
+load();render();
+</script>
+</body>
+</html>
