@@ -15,8 +15,9 @@
 :root{
   --bg:#080B12;--card:#0F1420;--card2:#161D2E;
   --acc:#00D68F;--acc-soft:rgba(0,214,143,0.1);--acc-dim:rgba(0,214,143,0.3);
-  --amber:#E8950A;--purple:#8B6FFF;--red:#FF4D4D;
-  --text:#F0EDE6;--sub:#7A8499;--dim:#3A4255;
+  --amber:#E8950A;--amber-soft:rgba(232,149,10,0.1);
+  --purple:#8B6FFF;--purple-soft:rgba(139,111,255,0.1);
+  --red:#FF4D4D;--text:#F0EDE6;--sub:#7A8499;--dim:#3A4255;
   --border:rgba(255,255,255,0.06);--border-acc:rgba(0,214,143,0.2);
   --safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px);
 }
@@ -36,9 +37,9 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .logo-text{font-size:20px;font-weight:900;letter-spacing:-0.8px;}
 .logo-acc{color:var(--acc);}
 .logo-tag{font-size:10px;font-weight:700;color:var(--dim);margin-left:5px;letter-spacing:1px;vertical-align:2px;}
-.sync-pill{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:100px;background:var(--acc-soft);border:0.5px solid var(--border-acc);}
-.sync-dot{width:6px;height:6px;border-radius:50%;background:var(--acc);animation:pulse 2s infinite;}
-.sync-txt{font-size:10px;font-weight:700;color:var(--acc);letter-spacing:0.5px;}
+.live-pill{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:100px;background:var(--acc-soft);border:0.5px solid var(--border-acc);}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--acc);animation:pulse 2s infinite;}
+.live-txt{font-size:10px;font-weight:700;color:var(--acc);letter-spacing:0.5px;}
 .clk{font-size:11px;color:var(--sub);font-variant-numeric:tabular-nums;}
 #tabs{display:flex;border-top:0.5px solid var(--border);margin-top:2px;}
 .tb{flex:1;padding:8px 0 10px;background:none;border:none;border-top:2px solid transparent;color:var(--sub);font-size:9px;font-weight:600;letter-spacing:0.5px;display:flex;flex-direction:column;align-items:center;gap:3px;transition:all 0.2s;margin-top:-0.5px;}
@@ -81,6 +82,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .chip{padding:7px 14px;border-radius:100px;border:0.5px solid var(--border);background:transparent;color:var(--sub);font-size:12px;font-weight:600;white-space:nowrap;flex-shrink:0;font-family:inherit;}
 .live-banner{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:14px;border:0.5px solid var(--border-acc);background:rgba(0,214,143,0.04);margin-bottom:14px;}
 .live-banner::after{content:'';position:absolute;top:0;left:0;width:30%;height:100%;background:linear-gradient(90deg,transparent,rgba(0,214,143,0.07),transparent);animation:shimmer 3s ease-in-out infinite;}
+.tg-pill{display:flex;gap:8px;align-items:center;padding:9px 13px;background:rgba(34,158,217,0.07);border-radius:12px;border:0.5px solid rgba(34,158,217,0.15);margin-bottom:14px;}
 .sec{font-size:10px;font-weight:700;color:var(--dim);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px;margin-top:18px;display:flex;align-items:center;gap:8px;}
 .sec:first-child{margin-top:0;}
 .sec::after{content:'';flex:1;height:0.5px;background:var(--border);}
@@ -101,8 +103,6 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .empty-icon{font-size:44px;margin-bottom:12px;}
 .empty-title{font-size:15px;font-weight:700;margin-bottom:6px;}
 .empty-sub{font-size:13px;color:var(--sub);line-height:1.5;margin-bottom:20px;}
-.toast{position:fixed;bottom:calc(var(--safe-bot) + 90px);left:50%;transform:translateX(-50%);background:var(--acc);color:#000;padding:10px 20px;border-radius:100px;font-size:12px;font-weight:700;z-index:9999;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;}
-.toast.show{opacity:1;}
 #sh{position:fixed;inset:0;z-index:999;display:none;}
 #sh.open{display:block;}
 #sh-bg{position:absolute;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);}
@@ -123,7 +123,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
         <div class="logo-text">Lead<span class="logo-acc">Flow</span><span class="logo-tag">PRO</span></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
-        <div class="sync-pill"><span class="sync-dot" id="sync-dot"></span><span class="sync-txt" id="sync-txt">SYNC</span></div>
+        <div class="live-pill"><span class="live-dot"></span><span class="live-txt">LIVE</span></div>
         <span class="clk" id="clk"></span>
       </div>
     </div>
@@ -136,7 +136,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
   </div>
   <div id="pg"></div>
 </div>
-<div class="toast" id="toast"></div>
+
 <div id="sh">
   <div id="sh-bg"></div>
   <div id="sh-box">
@@ -154,7 +154,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
     </div>
     <div class="g2">
       <div><div class="fl">PHONE</div><input id="fp" type="tel" placeholder="+1 555 000 0000"></div>
-      <div><div class="fl">SCORE (0-100)</div><input id="fsc" type="number" min="0" max="100" placeholder="Auto"></div>
+      <div><div class="fl">SCORE (0–100)</div><input id="fsc" type="number" min="0" max="100" placeholder="Auto"></div>
     </div>
     <div class="g2">
       <div><div class="fl">SOURCE</div>
@@ -188,12 +188,8 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
     <button class="btn bp" style="width:100%;padding:15px;font-size:15px;" id="sh-add">Add Lead</button>
   </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script>
-var SUPA_URL = 'https://bccipmyungoureqjiuhv.supabase.co';
-var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJjY2lwbXl1bmdvdXJlcWppdWh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NzM2MDMsImV4cCI6MjA5NDU0OTYwM30.NxDa-Yw59h31FhU0U7gEJ0PWCMkojs2x0tols8zLitk';
-var sb = supabase.createClient(SUPA_URL, SUPA_KEY);
 
+<script>
 var GRP='-1003814127256';
 var IND={
   pest:{label:'Pest Control',emoji:'🐛',color:'#00D68F',soft:'rgba(0,214,143,0.1)',dark:'#00D68F'},
@@ -207,11 +203,11 @@ var STC={
   closed:['rgba(255,255,255,0.05)','#3A4255']
 };
 var FIXES=[
-  {ok:true,title:'Apartment amenity false positives',before:'"Monthly Pest Service" listings firing as pest leads',after:'Requires intent: "roach problem","infestation","how to get rid of"',impact:'-96% noise'},
-  {ok:true,title:'Homes with solar = fake solar leads',before:'"FULL SOLAR/TESLA BATTERY" for-sale homes triggered',after:'"want solar","solar quote","high electric bill"',impact:'High-intent only'},
-  {ok:true,title:'2+2 Forums 403 Forbidden',before:'All 3 forum URLs blocked by bot detection',after:'Reddit API: r/poker, r/onlinepoker, r/gambling',impact:'Source restored'},
-  {ok:true,title:'Telegram 429 rate-limit burst',before:'20+ messages sent at once, throttled',after:'1.2s queue + exponential backoff on 429',impact:'0 dropped msgs'},
-  {ok:false,title:'Pest: add Reddit sources to scanner',before:'Craigslist has no organic pest problem posts',after:'Add r/pestcontrol + r/homeowners to scanner.js',impact:'Lead quality'}
+  {ok:true,title:'Apartment amenity false positives',before:'"Monthly Pest Service" listings firing as pest leads',after:'Requires intent: "roach problem","infestation","how to get rid of"',impact:'−96% noise'},
+  {ok:true,title:'Homes with solar = fake solar leads',before:'"FULL SOLAR/TESLA BATTERY" for-sale homes triggered',after:'"want solar","solar quote","high electric bill","is solar worth it"',impact:'High-intent only'},
+  {ok:true,title:'2+2 Forums → 403 Forbidden',before:'All 3 forum URLs blocked by bot detection',after:'Reddit API: r/poker, r/onlinepoker, r/gambling — live',impact:'Source restored'},
+  {ok:true,title:'Telegram 429 rate-limit burst',before:'20+ messages sent at once → throttled, messages dropped',after:'1.2s queue + exponential backoff on 429',impact:'0 dropped msgs'},
+  {ok:false,title:'Pest: add Reddit sources to scanner',before:'Craigslist has no organic pest problem posts',after:'Add r/pestcontrol + r/homeowners to scanner.js',impact:'↑ Lead quality'}
 ];
 var SOURCES=[
   {n:'Reddit r/pestcontrol',ind:'pest',st:'active',rate:'~3/day'},
@@ -223,81 +219,34 @@ var SOURCES=[
   {n:'2+2 Forums',ind:'poker',st:'error',rate:'403 blocked'}
 ];
 var AR={
-  pest:{on:true,delay:'30s',msg:'Hi {name}! Saw you are dealing with a pest issue. Our team covers OC and offers free same-week inspections. Want to book yours?'},
-  solar:{on:true,delay:'30s',msg:'Hey {name}, saw you are thinking about solar! We cover all of SoCal and can show your exact savings in 2 minutes. Want a free estimate?'},
-  poker:{on:false,delay:'5min',msg:'Hey {name}! We run Jolt Poker Club on ClubGG - NL/PLO/Tournaments, all stakes. 0 to start, weekly payouts. Want in?'}
+  pest:{on:true,delay:'30s',msg:'🐛 Hi {name}! Saw you\'re dealing with a pest issue. Our team covers OC and offers free same-week inspections. Want to book yours? 📅'},
+  solar:{on:true,delay:'30s',msg:'☀️ Hey {name}, saw you\'re thinking about solar! We cover all of SoCal and can show your exact savings in 2 minutes. Want a free estimate?'},
+  poker:{on:false,delay:'5min',msg:'🃏 Hey {name}! We run Jolt Poker Club on ClubGG — NL/PLO/Tournaments, all stakes. $30 to start, weekly payouts. Want in?'}
 };
 
-var leads=[],filterInd='all',expanded=null,curTab='feed',synced=false;
+var leads=[],activity=[],tgSent=0,filterInd='all',expanded=null,curTab='feed';
 
 function uid(){return Math.random().toString(36).slice(2,9);}
 function rel(ts){var d=Date.now()-ts;if(d<60000)return'just now';if(d<3600000)return Math.round(d/60000)+'m ago';if(d<86400000)return Math.round(d/3600000)+'h ago';return Math.round(d/86400000)+'d ago';}
 function scCol(s){return s>=80?'var(--acc)':s>=60?'var(--amber)':'var(--sub)';}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-function toast(msg){
-  var t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(function(){t.classList.remove('show');},2000);
+function save(){
+  try{localStorage.setItem('lf5-leads',JSON.stringify(leads));}catch(e){}
+  try{localStorage.setItem('lf5-ar',JSON.stringify(AR));}catch(e){}
+  try{localStorage.setItem('lf5-act',JSON.stringify(activity.slice(0,60)));}catch(e){}
+  try{localStorage.setItem('lf5-tg',String(tgSent));}catch(e){}
 }
-function setSyncStatus(ok){
-  var dot=document.getElementById('sync-dot');
-  var txt=document.getElementById('sync-txt');
-  if(!dot||!txt)return;
-  dot.style.background=ok?'var(--acc)':'var(--amber)';
-  txt.textContent=ok?'LIVE':'OFFLINE';
+function load(){
+  try{var d=localStorage.getItem('lf5-leads');if(d)leads=JSON.parse(d);}catch(e){}
+  try{var d2=localStorage.getItem('lf5-ar');if(d2){var p=JSON.parse(d2);AR.pest=p.pest||AR.pest;AR.solar=p.solar||AR.solar;AR.poker=p.poker||AR.poker;}}catch(e){}
+  try{var d3=localStorage.getItem('lf5-act');if(d3)activity=JSON.parse(d3);}catch(e){}
+  try{var d4=localStorage.getItem('lf5-tg');if(d4)tgSent=parseInt(d4)||0;}catch(e){}
 }
+function addAct(text,type){activity.unshift({id:uid(),text:text,type:type||'info',time:Date.now()});activity=activity.slice(0,60);}
 
 function tickClock(){var el=document.getElementById('clk');if(el)el.textContent=new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});}
 tickClock();setInterval(tickClock,1000);
-
-// Load AR from localStorage
-function loadAR(){
-  try{var d=localStorage.getItem('lf-ar');if(d){var p=JSON.parse(d);AR.pest=p.pest||AR.pest;AR.solar=p.solar||AR.solar;AR.poker=p.poker||AR.poker;}}catch(e){}
-}
-function saveAR(){try{localStorage.setItem('lf-ar',JSON.stringify(AR));}catch(e){}}
-
-// Supabase ops
-async function fetchLeads(){
-  try{
-    var res=await sb.from('leads').select('*').order('added',{ascending:false});
-    if(res.error)throw res.error;
-    leads=res.data||[];
-    synced=true;setSyncStatus(true);
-  }catch(e){
-    synced=false;setSyncStatus(false);
-    console.error('fetch error',e);
-  }
-  render();
-}
-
-async function insertLead(l){
-  try{
-    var res=await sb.from('leads').insert([l]);
-    if(res.error)throw res.error;
-    toast('Lead saved');
-  }catch(e){toast('Save failed');console.error(e);}
-  await fetchLeads();
-}
-
-async function updateLeadSt(id,st){
-  try{await sb.from('leads').update({st:st}).eq('id',id);}catch(e){console.error(e);}
-  await fetchLeads();
-}
-
-async function deleteLead(id){
-  try{await sb.from('leads').delete().eq('id',id);}catch(e){console.error(e);}
-  expanded=null;await fetchLeads();
-}
-
-// Real-time subscription
-function subscribeRealtime(){
-  sb.channel('leads-changes')
-    .on('postgres_changes',{event:'*',schema:'public',table:'leads'},function(){
-      fetchLeads();
-    })
-    .subscribe();
-}
 
 function bdg(ind){var i=IND[ind];return'<span class="bdg" style="background:'+i.soft+';color:'+i.dark+'">'+i.emoji+' '+i.label+'</span>';}
 function stBdg(s){var c=STC[s]||['rgba(255,255,255,0.05)','#3A4255'];return'<span class="bdg" style="background:'+c[0]+';color:'+c[1]+'">'+s+'</span>';}
@@ -340,96 +289,75 @@ function pageFeed(){
   var s={total:leads.length,nw:0,hot:0,avg:0};
   leads.forEach(function(l){if(l.st==='new')s.nw++;if(l.st==='qualified')s.hot++;s.avg+=l.score;});
   if(leads.length)s.avg=Math.round(s.avg/leads.length);
-  var h='<div class="live-banner"><div style="display:flex;align-items:center;gap:8px"><span class="sync-dot" style="width:6px;height:6px;border-radius:50%;background:var(--acc);animation:pulse 2s infinite;display:inline-block"></span><span style="font-size:11px;font-weight:700;color:var(--acc);letter-spacing:1px">LIVE SYNC</span><span style="font-size:11px;color:var(--dim)">shared · real-time</span></div><span style="font-size:11px;color:var(--dim)">'+(synced?'✓ connected':'connecting...')+'</span></div>';
+  var h='<div class="live-banner"><div style="display:flex;align-items:center;gap:8px"><span class="live-dot"></span><span style="font-size:11px;font-weight:700;color:var(--acc);letter-spacing:1px">SCANNER LIVE</span><span style="font-size:11px;color:var(--dim)">30 min cycle</span></div><span style="font-size:11px;color:var(--dim)">scanner.js</span></div>';
   h+='<div class="stats"><div class="stat w"><div class="sn">'+s.total+'</div><div class="sl">TOTAL</div></div><div class="stat g"><div class="sn" style="color:var(--acc)">'+s.nw+'</div><div class="sl">NEW</div></div><div class="stat a"><div class="sn" style="color:var(--amber)">'+s.hot+'</div><div class="sl">HOT</div></div><div class="stat p"><div class="sn" style="color:var(--purple)">'+s.avg+'</div><div class="sl">AVG</div></div></div>';
   h+='<div class="brow"><button class="btn bp" onclick="openSh()">+ Add Lead</button></div>';
-  if(!leads.length){h+=emptyState('⚡','No leads yet','Add your first lead. Both phones will see it instantly.','+ Add Lead','openSh()');}
-  else{[].concat(leads).slice(0,8).forEach(function(l){h+=leadCard(l);});}
+  if(tgSent>0)h+='<div class="tg-pill"><span style="font-size:16px">✈️</span><span style="font-size:12px;color:#5BB8E8"><b style="color:#7DCFEE">'+tgSent+'</b> auto-responses sent → <span style="font-family:\'SF Mono\',monospace;font-size:10px">'+GRP+'</span></span></div>';
+  if(!leads.length){h+=emptyState('⚡','No leads yet','Your scanner will push leads here automatically. Add them manually to get started.','+ Add Lead','openSh()');}
+  else{[].concat(leads).sort(function(a,b){return b.added-a.added;}).slice(0,8).forEach(function(l){h+=leadCard(l);});}
+  if(activity.length){h+='<div class="sec">Activity</div>';activity.slice(0,8).forEach(function(a){var col=a.type==='success'?'var(--acc)':a.type==='telegram'?'#5BB8E8':a.type==='scan'?'var(--amber)':'var(--dim)';h+='<div class="act-row"><div class="act-dot" style="background:'+col+'"></div><div><div style="font-size:12px;line-height:1.4">'+esc(a.text)+'</div><div style="font-size:10px;color:var(--dim);margin-top:1px">'+rel(a.time)+'</div></div></div>';});}
   return h;
 }
 
 function pageLeads(){
   var fl=filterInd==='all'?leads:leads.filter(function(l){return l.ind===filterInd;});
+  fl=[].concat(fl).sort(function(a,b){return b.added-a.added;});
   var h='<div class="chips">';
   ['all','pest','solar','poker'].forEach(function(f){
     var on=filterInd===f;var col=f==='all'?'var(--acc)':(IND[f]?IND[f].color:'var(--acc)');var soft=f==='all'?'var(--acc-soft)':(IND[f]?IND[f].soft:'var(--acc-soft)');
     h+='<button class="chip" onclick="setFilt(\''+f+'\')" style="'+(on?'border-color:'+col+';background:'+soft+';color:'+col+';font-weight:700;':'')+'">'+(f==='all'?'All':(IND[f].emoji+' '+IND[f].label))+'</button>';
   });
   h+='</div>';
-  if(!fl.length){h+=emptyState(filterInd==='all'?'👥':(IND[filterInd]?IND[filterInd].emoji:'👥'),'No leads','',filterInd==='all'?'+ Add Lead':null,'openSh()');}
+  if(!fl.length){h+=emptyState(filterInd==='all'?'👥':(IND[filterInd]?IND[filterInd].emoji:'👥'),'No leads yet',filterInd==='all'?'Add your first lead manually or let the scanner bring them in.':'No '+(IND[filterInd]?IND[filterInd].label:'')+' leads yet.',filterInd==='all'?'+ Add Lead':null,'openSh()');}
   else{h+='<div style="font-size:11px;color:var(--sub);margin-bottom:12px">'+fl.length+' lead'+(fl.length!==1?'s':'')+'</div>';fl.forEach(function(l){h+=leadCard(l);});}
   return h;
 }
 
 function pageScanner(){
   var h='<div class="sec" style="margin-top:0">Bot Config</div><div class="card cp">';
-  [['Bot Token','8616974859:AAGh...'],['Group ID',GRP],['Scanner','~/Desktop/bug-leads/scanner.js'],['Rate Limit','1.2s queue + backoff'],['Markets','OC Pest · SoCal Solar · US Poker'],['Database','Supabase · shared real-time'],['Status','● Connected']].forEach(function(r){
+  [['Bot Token','8616974859:AAGh•••••••••••'],['Group ID',GRP],['Scanner','~/Desktop/bug-leads/scanner.js'],['Rate Limit','1.2s queue · backoff on 429'],['Markets','OC Pest · SoCal Solar · US Poker'],['Status','● Connected']].forEach(function(r){
     h+='<div class="srcr" style="padding:8px 0"><span style="font-size:11px;color:var(--sub)">'+r[0]+'</span><span style="font-family:\'SF Mono\',monospace;font-size:11px;color:'+(r[0]==='Status'?'var(--acc)':'var(--text)')+';text-align:right;margin-left:10px;word-break:break-all">'+esc(r[1])+'</span></div>';
   });
   h+='</div><div class="hgrid">';
-  ['pest','solar','poker'].forEach(function(k){var i=IND[k];var cnt=leads.filter(function(l){return l.ind===k;}).length;var nw=leads.filter(function(l){return l.ind===k&&l.st==='new';}).length;h+='<div class="hc" style="background:'+i.soft+';border:0.5px solid '+i.color+'33"><div style="font-size:22px;margin-bottom:4px">'+i.emoji+'</div><div style="font-size:22px;font-weight:800;color:'+i.dark+';letter-spacing:-1px;font-variant-numeric:tabular-nums">'+cnt+'</div>'+(nw?'<div style="font-size:10px;font-weight:700;color:'+i.color+';margin-top:3px">'+nw+' new</div>':'<div style="font-size:10px;color:var(--dim);margin-top:3px">-</div>')+'</div>';});
+  ['pest','solar','poker'].forEach(function(k){var i=IND[k];var cnt=leads.filter(function(l){return l.ind===k;}).length;var nw=leads.filter(function(l){return l.ind===k&&l.st==='new';}).length;h+='<div class="hc" style="background:'+i.soft+';border:0.5px solid '+i.color+'33"><div style="font-size:22px;margin-bottom:4px">'+i.emoji+'</div><div style="font-size:22px;font-weight:800;color:'+i.dark+';letter-spacing:-1px;font-variant-numeric:tabular-nums">'+cnt+'</div>'+(nw?'<div style="font-size:10px;font-weight:700;color:'+i.color+';margin-top:3px">'+nw+' new</div>':'<div style="font-size:10px;color:var(--dim);margin-top:3px">—</div>')+'</div>';});
   h+='</div><div class="sec">Bugs Fixed</div>';
-  FIXES.forEach(function(f){h+='<div class="fix" style="border:0.5px solid '+(f.ok?'rgba(0,214,143,0.2)':'rgba(232,149,10,0.2)')+'"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px"><div style="font-size:12px;font-weight:700;line-height:1.4;flex:1">'+esc(f.title)+'</div><span class="fixtag" style="background:'+(f.ok?'rgba(0,214,143,0.1)':'rgba(232,149,10,0.1)')+';color:'+(f.ok?'var(--acc)':'var(--amber)')+'">'+( f.ok?'Fixed':'Todo')+'</span></div><div style="font-size:11px;color:var(--dim);margin-bottom:3px"><b style="color:var(--sub)">Before:</b> '+esc(f.before)+'</div><div style="font-size:11px;color:'+(f.ok?'var(--acc)':'var(--amber)')+'"><b>Fix:</b> '+esc(f.after)+'</div>'+(f.impact?'<div style="font-size:10px;font-weight:700;color:var(--dim);margin-top:4px">'+f.impact+'</div>':'')+'</div>';});
+  FIXES.forEach(function(f){h+='<div class="fix" style="border:0.5px solid '+(f.ok?'rgba(0,214,143,0.2)':'rgba(232,149,10,0.2)')+'"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px"><div style="font-size:12px;font-weight:700;line-height:1.4;flex:1">'+esc(f.title)+'</div><span class="fixtag" style="background:'+(f.ok?'rgba(0,214,143,0.1)':'rgba(232,149,10,0.1)')+';color:'+(f.ok?'var(--acc)':'var(--amber)')+'">'+( f.ok?'✓ Fixed':'⚠ Todo')+'</span></div><div style="font-size:11px;color:var(--dim);margin-bottom:3px"><b style="color:var(--sub)">Before:</b> '+esc(f.before)+'</div><div style="font-size:11px;color:'+(f.ok?'var(--acc)':'var(--amber)')+'"><b>Fix:</b> '+esc(f.after)+'</div>'+(f.impact?'<div style="font-size:10px;font-weight:700;color:var(--dim);margin-top:4px">'+f.impact+'</div>':'')+'</div>';});
   h+='<div class="sec">Sources</div><div class="card" style="padding:4px 16px">';
-  SOURCES.forEach(function(s,i){var col=s.st==='active'?'var(--acc)':s.st==='error'?'var(--red)':'var(--dim)';var tx=s.st==='active'?'LIVE':s.st==='error'?'ERR':'IDLE';h+='<div class="srcr"'+(i===SOURCES.length-1?' style="border-bottom:none"':'')+' ><div><div style="font-size:13px;font-weight:500">'+esc(s.n)+'</div><div style="font-size:11px;color:var(--dim);margin-top:1px">'+s.rate+' · '+IND[s.ind].emoji+'</div></div><div style="text-align:right"><div style="font-size:11px;font-weight:700;font-family:\'SF Mono\',monospace;color:'+col+'">'+tx+'</div></div></div>';});
+  SOURCES.forEach(function(s,i){var col=s.st==='active'?'var(--acc)':s.st==='error'?'var(--red)':'var(--dim)';var tx=s.st==='active'?'● LIVE':s.st==='error'?'✕ ERR':'○ IDLE';h+='<div class="srcr"'+(i===SOURCES.length-1?' style="border-bottom:none"':'')+' ><div><div style="font-size:13px;font-weight:500">'+esc(s.n)+'</div><div style="font-size:11px;color:var(--dim);margin-top:1px">'+s.rate+' · '+IND[s.ind].emoji+'</div></div><div style="text-align:right"><div style="font-size:11px;font-weight:700;font-family:\'SF Mono\',monospace;color:'+col+'">'+tx+'</div></div></div>';});
   h+='</div>';return h;
 }
 
 function pageConfig(){
-  var h='<div class="sec" style="margin-top:0">Auto-Responders</div>';
-  ['pest','solar','poker'].forEach(function(ind){var cfg=AR[ind];var i=IND[ind];h+='<div class="ar-card"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:22px">'+i.emoji+'</span><div><div style="font-size:13px;font-weight:700">'+i.label+'</div><div style="font-size:11px;color:var(--sub)">'+(cfg.on?'Delay: '+cfg.delay:'Disabled')+'</div></div></div><div class="tgl" onclick="togAr(\''+ind+'\')" style="background:'+(cfg.on?'var(--acc)':'rgba(255,255,255,0.1)')+'"><div class="tth" style="left:'+(cfg.on?22:2)+'px"></div></div></div><textarea style="resize:none;line-height:1.55;min-height:80px;font-size:13px;opacity:'+(cfg.on?1:0.5)+'" rows="4" '+(cfg.on?'':'disabled ')+'onchange="updMsg(\''+ind+'\',this.value)">'+esc(cfg.msg)+'</textarea><div style="font-size:10px;color:var(--dim);margin-top:6px">{name} = first name</div></div>';});
-  h+='<div class="sec">Scanner Webhook</div><div class="card cp"><div style="font-size:12px;color:var(--sub);margin-bottom:10px">Add to scanner.js after each lead found:</div><div class="code"><div style="color:var(--dim)">// Posts lead to Supabase shared DB</div><div style="color:#9cdcfe">const {data,error} = await sb</div><div style="padding-left:16px;color:#9cdcfe">.from(\'leads\')</div><div style="padding-left:16px;color:#9cdcfe">.insert([{id,name,phone,</div><div style="padding-left:32px;color:#ce9178">ind,src,st,score,quote,added}]);</div></div></div>';
+  var h='<div class="sec" style="margin-top:0">Auto-Responders · Telegram</div>';
+  ['pest','solar','poker'].forEach(function(ind){var cfg=AR[ind];var i=IND[ind];h+='<div class="ar-card"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:22px">'+i.emoji+'</span><div><div style="font-size:13px;font-weight:700">'+i.label+'</div><div style="font-size:11px;color:var(--sub)">'+(cfg.on?'Delay: '+cfg.delay:'Disabled')+'</div></div></div><div class="tgl" onclick="togAr(\''+ind+'\')" style="background:'+(cfg.on?'var(--acc)':'rgba(255,255,255,0.1)')+'"><div class="tth" style="left:'+(cfg.on?22:2)+'px"></div></div></div><textarea style="resize:none;line-height:1.55;min-height:80px;font-size:13px;opacity:'+(cfg.on?1:0.5)+'" rows="4" '+(cfg.on?'':'disabled ')+'onchange="updMsg(\''+ind+'\',this.value)">'+esc(cfg.msg)+'</textarea><div style="font-size:10px;color:var(--dim);margin-top:6px">{name} = first name · Group: <span style="font-family:\'SF Mono\',monospace">'+GRP+'</span></div></div>';});
+  h+='<div class="sec">Scanner Webhook</div><div class="card cp"><div style="font-size:12px;color:var(--sub);margin-bottom:10px">Add to scanner.js after each lead is found:</div><div class="code"><div style="color:var(--dim)">// 1.2s queue prevents Telegram 429s</div><div style="color:#9cdcfe">await queue.add(() =&gt; fetch(\'/api/lead\', {</div><div style="padding-left:16px;color:#ce9178">body: JSON.stringify({</div><div style="padding-left:32px;color:#ce9178">name, phone, industry,</div><div style="padding-left:32px;color:#ce9178">source, score, snippet</div><div style="padding-left:16px;color:#ce9178">})</div><div style="color:#9cdcfe">}));</div></div></div>';
   return h;
 }
 
 function toggleEx(id){expanded=(expanded===id?null:id);render();}
 function setFilt(f){filterInd=f;render();}
-function setSt(id,st){updateLeadSt(id,st);}
-function delLead(id){deleteLead(id);}
-function togAr(ind){AR[ind].on=!AR[ind].on;saveAR();render();}
-function updMsg(ind,msg){AR[ind].msg=msg;saveAR();}
+function setSt(id,st){var l=leads.find(function(x){return x.id===id;});leads=leads.map(function(x){return x.id===id?Object.assign({},x,{st:st}):x;});if(l)addAct(l.name+' → '+st,'update');save();render();}
+function delLead(id){leads=leads.filter(function(x){return x.id!==id;});expanded=null;save();render();}
+function togAr(ind){AR[ind].on=!AR[ind].on;save();render();}
+function updMsg(ind,msg){AR[ind].msg=msg;save();}
 function openSh(){document.getElementById('sh').classList.add('open');}
 function closeSh(){document.getElementById('sh').classList.remove('open');}
-
 document.getElementById('sh-bg').addEventListener('click',closeSh);
 document.getElementById('sh-add').addEventListener('click',function(){
   var name=document.getElementById('fn').value.trim();if(!name)return;
   var ind=document.getElementById('fi').value;
-  var l={
-    id:uid(),name:name,
-    phone:document.getElementById('fp').value.trim(),
-    ind:ind,src:document.getElementById('fsrc').value,
-    st:document.getElementById('fst').value,
-    score:parseInt(document.getElementById('fsc').value)||Math.floor(Math.random()*25+65),
-    quote:document.getElementById('fq').value.trim(),
-    added:Date.now()
-  };
-  closeSh();
-  document.getElementById('fn').value='';
-  document.getElementById('fp').value='';
-  document.getElementById('fsc').value='';
-  document.getElementById('fq').value='';
-  insertLead(l);
+  var l={id:uid(),name:name,phone:document.getElementById('fp').value.trim(),ind:ind,src:document.getElementById('fsrc').value,st:document.getElementById('fst').value,score:parseInt(document.getElementById('fsc').value)||Math.floor(Math.random()*25+65),quote:document.getElementById('fq').value.trim(),added:Date.now()};
+  leads.unshift(l);
+  addAct('New lead: '+l.name+' ('+IND[l.ind].label+') score '+l.score,'success');
+  if(AR[l.ind]&&AR[l.ind].on){tgSent++;addAct('Auto-responder queued → '+GRP,'telegram');}
+  save();closeSh();
+  document.getElementById('fn').value='';document.getElementById('fp').value='';document.getElementById('fsc').value='';document.getElementById('fq').value='';
+  render();
 });
 
-function render(){
-  var pg=document.getElementById('pg');
-  if(curTab==='feed')pg.innerHTML=pageFeed();
-  else if(curTab==='leads')pg.innerHTML=pageLeads();
-  else if(curTab==='scanner')pg.innerHTML=pageScanner();
-  else pg.innerHTML=pageConfig();
-}
-
-document.getElementById('tabs').addEventListener('click',function(e){
-  var btn=e.target.closest('.tb');if(!btn)return;
-  curTab=btn.dataset.t;expanded=null;
-  document.querySelectorAll('.tb').forEach(function(t){t.classList.remove('on');});
-  btn.classList.add('on');render();
-});
-
-loadAR();
-fetchLeads();
-subscribeRealtime();
+function render(){var pg=document.getElementById('pg');if(curTab==='feed')pg.innerHTML=pageFeed();else if(curTab==='leads')pg.innerHTML=pageLeads();else if(curTab==='scanner')pg.innerHTML=pageScanner();else pg.innerHTML=pageConfig();}
+document.getElementById('tabs').addEventListener('click',function(e){var btn=e.target.closest('.tb');if(!btn)return;curTab=btn.dataset.t;expanded=null;document.querySelectorAll('.tb').forEach(function(t){t.classList.remove('on');});btn.classList.add('on');render();});
+load();render();
 </script>
 </body>
 </html>
