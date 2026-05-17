@@ -7,6 +7,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="LeadFlow">
 <meta name="theme-color" content="#080B12">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon.png">
 <title>LeadFlow PRO</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
@@ -30,9 +32,11 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 #app{display:flex;flex-direction:column;min-height:100vh;min-height:100dvh;}
 #hdr{background:rgba(8,11,18,0.96);border-bottom:0.5px solid var(--border);padding:calc(var(--safe-top) + 14px) 16px 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
 #hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-.logo{font-size:20px;font-weight:900;letter-spacing:-0.8px;}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-img{width:32px;height:32px;border-radius:8px;}
+.logo-text{font-size:20px;font-weight:900;letter-spacing:-0.8px;}
 .logo-acc{color:var(--acc);}
-.logo-tag{font-size:10px;font-weight:700;color:var(--dim);margin-left:6px;letter-spacing:1px;vertical-align:2px;}
+.logo-tag{font-size:10px;font-weight:700;color:var(--dim);margin-left:5px;letter-spacing:1px;vertical-align:2px;}
 .live-pill{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:100px;background:var(--acc-soft);border:0.5px solid var(--border-acc);}
 .live-dot{width:6px;height:6px;border-radius:50%;background:var(--acc);animation:pulse 2s infinite;}
 .live-txt{font-size:10px;font-weight:700;color:var(--acc);letter-spacing:0.5px;}
@@ -50,7 +54,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .stat.g::after{background:linear-gradient(90deg,transparent,var(--acc),transparent);}
 .stat.a::after{background:linear-gradient(90deg,transparent,var(--amber),transparent);}
 .stat.p::after{background:linear-gradient(90deg,transparent,var(--purple),transparent);}
-.stat.w::after{background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);}
+.stat.w::after{background:linear-gradient(90deg,transparent,rgba(255,255,255,0.25),transparent);}
 .sn{font-size:20px;font-weight:800;letter-spacing:-1px;line-height:1;font-variant-numeric:tabular-nums;}
 .sl{font-size:9px;font-weight:700;color:var(--dim);letter-spacing:0.8px;margin-top:4px;}
 .lc{background:var(--card);border-radius:18px;border:0.5px solid var(--border);margin-bottom:10px;overflow:hidden;}
@@ -95,6 +99,10 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .ar-card{background:var(--card);border-radius:18px;border:0.5px solid var(--border);padding:14px 16px;margin-bottom:10px;}
 .hgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}
 .hc{border-radius:14px;padding:13px 10px;text-align:center;}
+.empty{text-align:center;padding:60px 20px;}
+.empty-icon{font-size:44px;margin-bottom:12px;}
+.empty-title{font-size:15px;font-weight:700;margin-bottom:6px;}
+.empty-sub{font-size:13px;color:var(--sub);line-height:1.5;margin-bottom:20px;}
 #sh{position:fixed;inset:0;z-index:999;display:none;}
 #sh.open{display:block;}
 #sh-bg{position:absolute;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);}
@@ -110,9 +118,9 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 <div id="app">
   <div id="hdr">
     <div id="hdr-top">
-      <div>
-        <div class="logo">Lead<span class="logo-acc">Flow</span><span class="logo-tag">PRO</span></div>
-        <div style="font-size:11px;color:var(--sub);margin-top:1px;">Cade · SoCal Scanner</div>
+      <div class="logo">
+        <img src="icon.png" class="logo-img" alt="LeadFlow">
+        <div class="logo-text">Lead<span class="logo-acc">Flow</span><span class="logo-tag">PRO</span></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="live-pill"><span class="live-dot"></span><span class="live-txt">LIVE</span></div>
@@ -128,6 +136,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
   </div>
   <div id="pg"></div>
 </div>
+
 <div id="sh">
   <div id="sh-bg"></div>
   <div id="sh-box">
@@ -135,59 +144,221 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
     <div class="sh-t">New Lead</div>
     <div class="g2">
       <div><div class="fl">NAME *</div><input id="fn" placeholder="Jane Smith"></div>
-      <div><div class="fl">INDUSTRY</div><select id="fi"><option value="pest">🐛 Pest Control</option><option value="solar">☀️ Solar</option><option value="poker">🃏 Poker</option></select></div>
+      <div><div class="fl">INDUSTRY</div>
+        <select id="fi">
+          <option value="pest">🐛 Pest Control</option>
+          <option value="solar">☀️ Solar</option>
+          <option value="poker">🃏 Poker</option>
+        </select>
+      </div>
     </div>
     <div class="g2">
       <div><div class="fl">PHONE</div><input id="fp" type="tel" placeholder="+1 555 000 0000"></div>
       <div><div class="fl">SCORE (0–100)</div><input id="fsc" type="number" min="0" max="100" placeholder="Auto"></div>
     </div>
     <div class="g2">
-      <div><div class="fl">SOURCE</div><select id="fsrc"><option>Reddit r/homeowners</option><option>Reddit r/pestcontrol</option><option>Reddit r/solar</option><option>Reddit r/onlinepoker</option><option>Reddit r/poker</option><option>Nextdoor</option><option>Facebook</option><option>Google</option><option>Referral</option><option>Scanner</option><option>Other</option></select></div>
-      <div><div class="fl">STATUS</div><select id="fst"><option value="new">New</option><option value="contacted">Contacted</option><option value="qualified">Qualified</option><option value="closed">Closed</option></select></div>
+      <div><div class="fl">SOURCE</div>
+        <select id="fsrc">
+          <option>Reddit r/homeowners</option>
+          <option>Reddit r/pestcontrol</option>
+          <option>Reddit r/solar</option>
+          <option>Reddit r/onlinepoker</option>
+          <option>Reddit r/poker</option>
+          <option>Nextdoor</option>
+          <option>Facebook</option>
+          <option>Google</option>
+          <option>Referral</option>
+          <option>Scanner</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div><div class="fl">STATUS</div>
+        <select id="fst">
+          <option value="new">New</option>
+          <option value="contacted">Contacted</option>
+          <option value="qualified">Qualified</option>
+          <option value="closed">Closed</option>
+        </select>
+      </div>
     </div>
-    <div class="mb12"><div class="fl">THEIR QUOTE / POST</div><textarea id="fq" rows="3" style="resize:none;line-height:1.5;" placeholder='"Copy their exact words here..."'></textarea></div>
+    <div class="mb12">
+      <div class="fl">THEIR QUOTE / POST</div>
+      <textarea id="fq" rows="3" style="resize:none;line-height:1.5;" placeholder='"Copy their exact words here..."'></textarea>
+    </div>
     <button class="btn bp" style="width:100%;padding:15px;font-size:15px;" id="sh-add">Add Lead</button>
   </div>
 </div>
+
 <script>
 var GRP='-1003814127256';
-var IND={pest:{label:'Pest Control',emoji:'🐛',color:'#00D68F',soft:'rgba(0,214,143,0.1)',dark:'#00D68F'},solar:{label:'Solar',emoji:'☀️',color:'#E8950A',soft:'rgba(232,149,10,0.1)',dark:'#E8950A'},poker:{label:'Poker',emoji:'🃏',color:'#8B6FFF',soft:'rgba(139,111,255,0.1)',dark:'#8B6FFF'}};
-var STC={new:['rgba(139,111,255,0.15)','#8B6FFF'],contacted:['rgba(232,149,10,0.15)','#E8950A'],qualified:['rgba(0,214,143,0.15)','#00D68F'],closed:['rgba(255,255,255,0.05)','#3A4255']};
-var FIXES=[{ok:true,title:'Apartment amenity false positives',before:'"Monthly Pest Service" listings firing as pest leads',after:'Requires intent: "roach problem","infestation","how to get rid of"',impact:'−96% noise'},{ok:true,title:'Homes with solar = fake solar leads',before:'"FULL SOLAR/TESLA BATTERY" for-sale homes triggered',after:'"want solar","solar quote","high electric bill","is solar worth it"',impact:'High-intent only'},{ok:true,title:'2+2 Forums → 403 Forbidden',before:'All 3 forum URLs blocked by bot detection',after:'Reddit API: r/poker, r/onlinepoker, r/gambling — live',impact:'Source restored'},{ok:true,title:'Telegram 429 rate-limit burst',before:'20+ messages sent at once → throttled, messages dropped',after:'1.2s queue + exponential backoff on 429',impact:'0 dropped msgs'},{ok:false,title:'No organic pest posts on Craigslist',before:'People don\'t post "I have roaches" on Craigslist',after:'Add Reddit r/pestcontrol + r/homeowners to scanner.js',impact:'↑ Lead quality'}];
-var SOURCES=[{n:'Reddit r/pestcontrol',ind:'pest',st:'active',leads:8,rate:'~3/day'},{n:'Reddit r/homeowners',ind:'pest',st:'active',leads:14,rate:'~5/day'},{n:'Reddit r/solar',ind:'solar',st:'active',leads:11,rate:'~4/day'},{n:'Reddit r/onlinepoker',ind:'poker',st:'active',leads:9,rate:'~3/day'},{n:'Reddit r/poker',ind:'poker',st:'active',leads:7,rate:'~2/day'},{n:'Craigslist OC/SoCal',ind:'solar',st:'active',leads:4,rate:'~1/day'},{n:'2+2 Forums',ind:'poker',st:'error',leads:0,rate:'403 blocked'}];
-var AR={pest:{on:true,delay:'30s',msg:'🐛 Hi {name}! We saw you\'re dealing with a pest issue. Our team covers OC and offers free same-week inspections. Want to book yours? 📅'},solar:{on:true,delay:'30s',msg:'☀️ Hey {name}, saw you\'re thinking about solar! We cover all of SoCal and can show you your savings in 2 minutes. Want a free custom estimate?'},poker:{on:false,delay:'5min',msg:'🃏 Hey {name}! We run Jolt Poker Club on ClubGG — NL/PLO/Tournaments, all stakes. $30 to start, weekly payouts. Want in?'}};
-var leads=[],activity=[],tgSent=14,filterInd='all',expanded=null,curTab='feed';
+var IND={
+  pest:{label:'Pest Control',emoji:'🐛',color:'#00D68F',soft:'rgba(0,214,143,0.1)',dark:'#00D68F'},
+  solar:{label:'Solar',emoji:'☀️',color:'#E8950A',soft:'rgba(232,149,10,0.1)',dark:'#E8950A'},
+  poker:{label:'Poker',emoji:'🃏',color:'#8B6FFF',soft:'rgba(139,111,255,0.1)',dark:'#8B6FFF'}
+};
+var STC={
+  new:['rgba(139,111,255,0.15)','#8B6FFF'],
+  contacted:['rgba(232,149,10,0.15)','#E8950A'],
+  qualified:['rgba(0,214,143,0.15)','#00D68F'],
+  closed:['rgba(255,255,255,0.05)','#3A4255']
+};
+var FIXES=[
+  {ok:true,title:'Apartment amenity false positives',before:'"Monthly Pest Service" listings firing as pest leads',after:'Requires intent: "roach problem","infestation","how to get rid of"',impact:'−96% noise'},
+  {ok:true,title:'Homes with solar = fake solar leads',before:'"FULL SOLAR/TESLA BATTERY" for-sale homes triggered',after:'"want solar","solar quote","high electric bill","is solar worth it"',impact:'High-intent only'},
+  {ok:true,title:'2+2 Forums → 403 Forbidden',before:'All 3 forum URLs blocked by bot detection',after:'Reddit API: r/poker, r/onlinepoker, r/gambling — live',impact:'Source restored'},
+  {ok:true,title:'Telegram 429 rate-limit burst',before:'20+ messages sent at once → throttled, messages dropped',after:'1.2s queue + exponential backoff on 429',impact:'0 dropped msgs'},
+  {ok:false,title:'Pest: add Reddit sources to scanner',before:'Craigslist has no organic pest problem posts',after:'Add r/pestcontrol + r/homeowners to scanner.js',impact:'↑ Lead quality'}
+];
+var SOURCES=[
+  {n:'Reddit r/pestcontrol',ind:'pest',st:'active',rate:'~3/day'},
+  {n:'Reddit r/homeowners',ind:'pest',st:'active',rate:'~5/day'},
+  {n:'Reddit r/solar',ind:'solar',st:'active',rate:'~4/day'},
+  {n:'Reddit r/onlinepoker',ind:'poker',st:'active',rate:'~3/day'},
+  {n:'Reddit r/poker',ind:'poker',st:'active',rate:'~2/day'},
+  {n:'Craigslist SoCal',ind:'solar',st:'active',rate:'~1/day'},
+  {n:'2+2 Forums',ind:'poker',st:'error',rate:'403 blocked'}
+];
+var AR={
+  pest:{on:true,delay:'30s',msg:'🐛 Hi {name}! Saw you\'re dealing with a pest issue. Our team covers OC and offers free same-week inspections. Want to book yours? 📅'},
+  solar:{on:true,delay:'30s',msg:'☀️ Hey {name}, saw you\'re thinking about solar! We cover all of SoCal and can show your exact savings in 2 minutes. Want a free estimate?'},
+  poker:{on:false,delay:'5min',msg:'🃏 Hey {name}! We run Jolt Poker Club on ClubGG — NL/PLO/Tournaments, all stakes. $30 to start, weekly payouts. Want in?'}
+};
+
+var leads=[],activity=[],tgSent=0,filterInd='all',expanded=null,curTab='feed';
+
 function uid(){return Math.random().toString(36).slice(2,9);}
 function rel(ts){var d=Date.now()-ts;if(d<60000)return'just now';if(d<3600000)return Math.round(d/60000)+'m ago';if(d<86400000)return Math.round(d/3600000)+'h ago';return Math.round(d/86400000)+'d ago';}
 function scCol(s){return s>=80?'var(--acc)':s>=60?'var(--amber)':'var(--sub)';}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function seedLeads(){var n=Date.now();return[{id:'s1',name:'Marcus R.',phone:'+1 602-555-0183',ind:'pest',src:'Reddit r/homeowners',st:'qualified',score:87,quote:'"Roaches taking over my kitchen, tried everything"',added:n-7200000},{id:'s2',name:'Jenna Cole',phone:'+1 480-555-0247',ind:'solar',src:'Reddit r/solar',st:'new',score:93,quote:'"SCE bill hit $480 this month, seriously considering solar"',added:n-3600000},{id:'s3',name:'Derek T.',phone:'+1 702-555-0311',ind:'poker',src:'Reddit r/onlinepoker',st:'contacted',score:67,quote:'"Looking for real money online poker that works in CA"',added:n-14400000},{id:'s4',name:'Amanda S.',phone:'',ind:'pest',src:'Reddit r/pestcontrol',st:'new',score:79,quote:'"Ant infestation in backyard, now coming inside"',added:n-1800000},{id:'s5',name:'Roy C.',phone:'+1 480-555-0588',ind:'solar',src:'Craigslist OC',st:'closed',score:95,quote:'"Edison bill is killing me, need solar ASAP"',added:n-86400000},{id:'s6',name:'Tiffany W.',phone:'+1 702-555-0632',ind:'poker',src:'Reddit r/gambling',st:'new',score:61,quote:'"Best poker app to play from home?"',added:n-2700000}];}
-function save(){try{localStorage.setItem('lf4-leads',JSON.stringify(leads));}catch(e){}try{localStorage.setItem('lf4-ar',JSON.stringify(AR));}catch(e){}try{localStorage.setItem('lf4-act',JSON.stringify(activity.slice(0,60)));}catch(e){}try{localStorage.setItem('lf4-tg',String(tgSent));}catch(e){}}
-function load(){try{var d=localStorage.getItem('lf4-leads');leads=d?JSON.parse(d):seedLeads();}catch(e){leads=seedLeads();}try{var d2=localStorage.getItem('lf4-ar');if(d2){var p=JSON.parse(d2);AR.pest=p.pest||AR.pest;AR.solar=p.solar||AR.solar;AR.poker=p.poker||AR.poker;}}catch(e){}try{var d3=localStorage.getItem('lf4-act');if(d3)activity=JSON.parse(d3);}catch(e){}try{var d4=localStorage.getItem('lf4-tg');if(d4)tgSent=parseInt(d4)||14;}catch(e){}}
+
+function save(){
+  try{localStorage.setItem('lf5-leads',JSON.stringify(leads));}catch(e){}
+  try{localStorage.setItem('lf5-ar',JSON.stringify(AR));}catch(e){}
+  try{localStorage.setItem('lf5-act',JSON.stringify(activity.slice(0,60)));}catch(e){}
+  try{localStorage.setItem('lf5-tg',String(tgSent));}catch(e){}
+}
+function load(){
+  try{var d=localStorage.getItem('lf5-leads');if(d)leads=JSON.parse(d);}catch(e){}
+  try{var d2=localStorage.getItem('lf5-ar');if(d2){var p=JSON.parse(d2);AR.pest=p.pest||AR.pest;AR.solar=p.solar||AR.solar;AR.poker=p.poker||AR.poker;}}catch(e){}
+  try{var d3=localStorage.getItem('lf5-act');if(d3)activity=JSON.parse(d3);}catch(e){}
+  try{var d4=localStorage.getItem('lf5-tg');if(d4)tgSent=parseInt(d4)||0;}catch(e){}
+}
 function addAct(text,type){activity.unshift({id:uid(),text:text,type:type||'info',time:Date.now()});activity=activity.slice(0,60);}
+
 function tickClock(){var el=document.getElementById('clk');if(el)el.textContent=new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});}
 tickClock();setInterval(tickClock,1000);
+
 function bdg(ind){var i=IND[ind];return'<span class="bdg" style="background:'+i.soft+';color:'+i.dark+'">'+i.emoji+' '+i.label+'</span>';}
 function stBdg(s){var c=STC[s]||['rgba(255,255,255,0.05)','#3A4255'];return'<span class="bdg" style="background:'+c[0]+';color:'+c[1]+'">'+s+'</span>';}
 function scorBar(s){return'<div class="sb"><div class="sf" style="width:'+s+'%;background:'+scCol(s)+'"></div></div>';}
-function leadCard(l){var i=IND[l.ind];var ex=expanded===l.id;var det='';if(ex){var stBtns='';['new','contacted','qualified','closed'].forEach(function(s){var c=STC[s];var act=l.st===s;stBtns+='<button class="stb" onclick="setSt(\''+l.id+'\',\''+s+'\')" style="border-color:'+(act?i.color:'var(--border)')+';background:'+(act?i.soft:'transparent')+';color:'+(act?i.dark:'var(--sub)')+'">'+s+'</button>';});det='<div class="ld">'+(l.phone?'<div class="dc">📱 <span>'+esc(l.phone)+'</span></div>':'')+'<div class="dc">📍 <span>'+esc(l.src)+'</span></div><div class="stbts">'+stBtns+'</div></div>';}return'<div class="lc" style="border-left:3px solid '+i.color+'">'+'<div class="lh" onclick="toggleEx(\''+l.id+'\')">'+'<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">'+'<div style="flex:1;min-width:0">'+'<div class="ln">'+esc(l.name)+'</div>'+'<div class="lm">'+bdg(l.ind)+stBdg(l.st)+'</div>'+(l.quote?'<div class="lq">'+esc(l.quote)+'</div>':'')+'<div class="ls">'+esc(l.src)+' · '+rel(l.added)+'</div>'+'</div>'+'<div style="text-align:right;flex-shrink:0">'+'<div class="sc" style="color:'+scCol(l.score)+'">'+l.score+'</div>'+scorBar(l.score)+'<div style="font-size:10px;color:var(--dim);margin-top:4px">'+(ex?'▲':'▼')+'</div>'+'</div>'+'</div>'+'</div>'+det+'</div>';}
-function pageFeed(){var s={total:leads.length,nw:0,hot:0,avg:0};leads.forEach(function(l){if(l.st==='new')s.nw++;if(l.st==='qualified')s.hot++;s.avg+=l.score;});if(leads.length)s.avg=Math.round(s.avg/leads.length);var h='';h+='<div class="live-banner"><div style="display:flex;align-items:center;gap:8px"><span class="live-dot"></span><span style="font-size:11px;font-weight:700;color:var(--acc);letter-spacing:1px">SCANNER LIVE</span><span style="font-size:11px;color:var(--dim)">30 min cycle</span></div><span style="font-size:11px;color:var(--dim)">scanner.js</span></div>';h+='<div class="stats"><div class="stat w"><div class="sn">'+s.total+'</div><div class="sl">TOTAL</div></div><div class="stat g"><div class="sn" style="color:var(--acc)">'+s.nw+'</div><div class="sl">NEW</div></div><div class="stat a"><div class="sn" style="color:var(--amber)">'+s.hot+'</div><div class="sl">HOT</div></div><div class="stat p"><div class="sn" style="color:var(--purple)">'+s.avg+'</div><div class="sl">AVG</div></div></div>';h+='<div class="brow"><button class="btn bp" onclick="openSh()">+ Add Lead</button><button class="btn bg2" onclick="simScan()">⚡ Scan</button></div>';h+='<div class="tg-pill"><span style="font-size:16px">✈️</span><span style="font-size:12px;color:#5BB8E8"><b style="color:#7DCFEE">'+tgSent+'</b> sent → Group <span style="font-family:\'SF Mono\',monospace;font-size:10px">'+GRP+'</span></span></div>';var recent=[].concat(leads).sort(function(a,b){return b.added-a.added;}).slice(0,8);recent.forEach(function(l){h+=leadCard(l);});if(activity.length){h+='<div class="sec">Activity</div>';activity.slice(0,6).forEach(function(a){var col=a.type==='success'?'var(--acc)':a.type==='telegram'?'#5BB8E8':a.type==='scan'?'var(--amber)':'var(--dim)';h+='<div class="act-row"><div class="act-dot" style="background:'+col+'"></div><div><div style="font-size:12px;line-height:1.4">'+esc(a.text)+'</div><div style="font-size:10px;color:var(--dim);margin-top:1px">'+rel(a.time)+'</div></div></div>';});}return h;}
-function pageLeads(){var fl=filterInd==='all'?leads:leads.filter(function(l){return l.ind===filterInd;});fl=[].concat(fl).sort(function(a,b){return b.added-a.added;});var h='<div class="chips">';['all','pest','solar','poker'].forEach(function(f){var on=filterInd===f;var col=f==='all'?'var(--acc)':(IND[f]?IND[f].color:'var(--acc)');var soft=f==='all'?'var(--acc-soft)':(IND[f]?IND[f].soft:'var(--acc-soft)');h+='<button class="chip" onclick="setFilt(\''+f+'\')" style="'+(on?'border-color:'+col+';background:'+soft+';color:'+col+';font-weight:700;':'')+'">'+(f==='all'?'All':(IND[f].emoji+' '+IND[f].label))+'</button>';});h+='</div><div style="font-size:11px;color:var(--sub);margin-bottom:12px">'+fl.length+' leads</div>';if(!fl.length)h+='<div style="text-align:center;color:var(--sub);padding:50px 0;font-size:14px">No leads here yet.</div>';fl.forEach(function(l){h+=leadCard(l);});return h;}
-function pageScanner(){var h='<div class="sec" style="margin-top:0">Bot Config</div><div class="card cp">';[['Bot Token','8616974859:AAGh•••••••••••'],['Group ID',GRP],['Scanner','~/Desktop/bug-leads/scanner.js'],['Rate Limit','1.2s queue · backoff on 429'],['Markets','OC Pest · SoCal Solar · US Poker'],['Status','● Connected']].forEach(function(r){h+='<div class="srcr" style="padding:8px 0"><span style="font-size:11px;color:var(--sub)">'+r[0]+'</span><span style="font-family:\'SF Mono\',monospace;font-size:11px;color:'+(r[0]==='Status'?'var(--acc)':'var(--text)')+';text-align:right;margin-left:10px">'+esc(r[1])+'</span></div>';});h+='</div><div class="hgrid">';['pest','solar','poker'].forEach(function(k){var i=IND[k];var cnt=leads.filter(function(l){return l.ind===k;}).length;var nw=leads.filter(function(l){return l.ind===k&&l.st==='new';}).length;h+='<div class="hc" style="background:'+i.soft+';border:0.5px solid '+i.color+'33"><div style="font-size:22px;margin-bottom:4px">'+i.emoji+'</div><div style="font-size:22px;font-weight:800;color:'+i.dark+';letter-spacing:-1px;font-variant-numeric:tabular-nums">'+cnt+'</div>'+(nw?'<div style="font-size:10px;font-weight:700;color:'+i.color+';margin-top:3px">'+nw+' new</div>':'<div style="font-size:10px;color:var(--dim);margin-top:3px">—</div>')+'</div>';});h+='</div><div class="sec">Bugs Fixed</div>';FIXES.forEach(function(f){h+='<div class="fix" style="border:0.5px solid '+(f.ok?'rgba(0,214,143,0.2)':'rgba(232,149,10,0.2)')+'"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px"><div style="font-size:12px;font-weight:700;line-height:1.4;flex:1">'+esc(f.title)+'</div><span class="fixtag" style="background:'+(f.ok?'rgba(0,214,143,0.1)':'rgba(232,149,10,0.1)')+';color:'+(f.ok?'var(--acc)':'var(--amber)')+'">'+( f.ok?'✓ Fixed':'⚠ Todo')+'</span></div><div style="font-size:11px;color:var(--dim);margin-bottom:3px"><b style="color:var(--sub)">Before:</b> '+esc(f.before)+'</div><div style="font-size:11px;color:'+(f.ok?'var(--acc)':'var(--amber)')+'"><b>Fix:</b> '+esc(f.after)+'</div>'+(f.impact?'<div style="font-size:10px;font-weight:700;color:var(--dim);margin-top:4px">'+f.impact+'</div>':'')+'</div>';});h+='<div class="sec">Sources</div><div class="card" style="padding:4px 16px">';SOURCES.forEach(function(s,i){var col=s.st==='active'?'var(--acc)':s.st==='error'?'var(--red)':'var(--dim)';var tx=s.st==='active'?'● LIVE':s.st==='error'?'✕ ERR':'○ IDLE';h+='<div class="srcr"'+(i===SOURCES.length-1?' style="border-bottom:none"':'')+' ><div><div style="font-size:13px;font-weight:500">'+esc(s.n)+'</div><div style="font-size:11px;color:var(--dim);margin-top:1px">'+s.rate+' · '+IND[s.ind].emoji+'</div></div><div style="text-align:right"><div style="font-size:11px;font-weight:700;font-family:\'SF Mono\',monospace;color:'+col+'">'+tx+'</div><div style="font-size:10px;color:var(--dim);margin-top:1px">'+s.leads+' leads</div></div></div>';});h+='</div>';return h;}
-function pageConfig(){var h='<div class="sec" style="margin-top:0">Auto-Responders</div>';['pest','solar','poker'].forEach(function(ind){var cfg=AR[ind];var i=IND[ind];h+='<div class="ar-card"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:22px">'+i.emoji+'</span><div><div style="font-size:13px;font-weight:700">'+i.label+'</div><div style="font-size:11px;color:var(--sub)">'+(cfg.on?'Delay: '+cfg.delay:'Disabled')+'</div></div></div><div class="tgl" onclick="togAr(\''+ind+'\')" style="background:'+(cfg.on?'var(--acc)':'rgba(255,255,255,0.1)')+'"><div class="tth" style="left:'+(cfg.on?22:2)+'px"></div></div></div><textarea style="resize:none;line-height:1.55;min-height:80px;font-size:13px;opacity:'+(cfg.on?1:0.5)+'" rows="4" '+(cfg.on?'':'disabled ')+'onchange="updMsg(\''+ind+'\',this.value)">'+esc(cfg.msg)+'</textarea><div style="font-size:10px;color:var(--dim);margin-top:6px">{name} = first name · Group: <span style="font-family:\'SF Mono\',monospace">'+GRP+'</span></div></div>';});h+='<div class="sec">Scanner Webhook</div><div class="card cp"><div style="font-size:12px;color:var(--sub);margin-bottom:10px">Add to scanner.js after each lead found:</div><div class="code"><div style="color:var(--dim)">// queue prevents 429 rate limits</div><div style="color:#9cdcfe">await queue.add(() =&gt; fetch(\'/api/lead\', {</div><div style="padding-left:16px;color:#ce9178">body: JSON.stringify({</div><div style="padding-left:32px;color:#ce9178">name, phone, industry,</div><div style="padding-left:32px;color:#ce9178">source, score, snippet</div><div style="padding-left:16px;color:#ce9178">})</div><div style="color:#9cdcfe">}));</div></div></div>';return h;}
+
+function emptyState(icon,title,sub,btn,action){
+  return'<div class="empty"><div class="empty-icon">'+icon+'</div><div class="empty-title">'+title+'</div><div class="empty-sub">'+sub+'</div>'+(btn?'<button class="btn bp" onclick="'+action+'">'+btn+'</button>':'')+'</div>';
+}
+
+function leadCard(l){
+  var i=IND[l.ind];var ex=expanded===l.id;var det='';
+  if(ex){
+    var stBtns='';
+    ['new','contacted','qualified','closed'].forEach(function(s){
+      var c=STC[s];var act=l.st===s;
+      stBtns+='<button class="stb" onclick="setSt(\''+l.id+'\',\''+s+'\')" style="border-color:'+(act?i.color:'var(--border)')+';background:'+(act?i.soft:'transparent')+';color:'+(act?i.dark:'var(--sub)')+'">'+s+'</button>';
+    });
+    det='<div class="ld">'
+      +(l.phone?'<div class="dc">📱 <span>'+esc(l.phone)+'</span></div>':'')
+      +'<div class="dc">📍 <span>'+esc(l.src)+'</span></div>'
+      +'<div class="stbts">'+stBtns+'</div>'
+      +'<div style="margin-top:12px"><button class="btn" style="font-size:11px;padding:7px 13px;color:var(--red);border:0.5px solid rgba(255,77,77,0.25);border-radius:100px" onclick="delLead(\''+l.id+'\')">Remove lead</button></div>'
+      +'</div>';
+  }
+  return'<div class="lc" style="border-left:3px solid '+i.color+'">'
+    +'<div class="lh" onclick="toggleEx(\''+l.id+'\')">'
+    +'<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">'
+    +'<div style="flex:1;min-width:0"><div class="ln">'+esc(l.name)+'</div>'
+    +'<div class="lm">'+bdg(l.ind)+stBdg(l.st)+'</div>'
+    +(l.quote?'<div class="lq">'+esc(l.quote)+'</div>':'')
+    +'<div class="ls">'+esc(l.src)+' · '+rel(l.added)+'</div></div>'
+    +'<div style="text-align:right;flex-shrink:0">'
+    +'<div class="sc" style="color:'+scCol(l.score)+'">'+l.score+'</div>'
+    +scorBar(l.score)
+    +'<div style="font-size:10px;color:var(--dim);margin-top:4px">'+(ex?'▲':'▼')+'</div>'
+    +'</div></div></div>'+det+'</div>';
+}
+
+function pageFeed(){
+  var s={total:leads.length,nw:0,hot:0,avg:0};
+  leads.forEach(function(l){if(l.st==='new')s.nw++;if(l.st==='qualified')s.hot++;s.avg+=l.score;});
+  if(leads.length)s.avg=Math.round(s.avg/leads.length);
+  var h='<div class="live-banner"><div style="display:flex;align-items:center;gap:8px"><span class="live-dot"></span><span style="font-size:11px;font-weight:700;color:var(--acc);letter-spacing:1px">SCANNER LIVE</span><span style="font-size:11px;color:var(--dim)">30 min cycle</span></div><span style="font-size:11px;color:var(--dim)">scanner.js</span></div>';
+  h+='<div class="stats"><div class="stat w"><div class="sn">'+s.total+'</div><div class="sl">TOTAL</div></div><div class="stat g"><div class="sn" style="color:var(--acc)">'+s.nw+'</div><div class="sl">NEW</div></div><div class="stat a"><div class="sn" style="color:var(--amber)">'+s.hot+'</div><div class="sl">HOT</div></div><div class="stat p"><div class="sn" style="color:var(--purple)">'+s.avg+'</div><div class="sl">AVG</div></div></div>';
+  h+='<div class="brow"><button class="btn bp" onclick="openSh()">+ Add Lead</button></div>';
+  if(tgSent>0)h+='<div class="tg-pill"><span style="font-size:16px">✈️</span><span style="font-size:12px;color:#5BB8E8"><b style="color:#7DCFEE">'+tgSent+'</b> auto-responses sent → <span style="font-family:\'SF Mono\',monospace;font-size:10px">'+GRP+'</span></span></div>';
+  if(!leads.length){h+=emptyState('⚡','No leads yet','Your scanner will push leads here automatically. Add them manually to get started.','+ Add Lead','openSh()');}
+  else{[].concat(leads).sort(function(a,b){return b.added-a.added;}).slice(0,8).forEach(function(l){h+=leadCard(l);});}
+  if(activity.length){h+='<div class="sec">Activity</div>';activity.slice(0,8).forEach(function(a){var col=a.type==='success'?'var(--acc)':a.type==='telegram'?'#5BB8E8':a.type==='scan'?'var(--amber)':'var(--dim)';h+='<div class="act-row"><div class="act-dot" style="background:'+col+'"></div><div><div style="font-size:12px;line-height:1.4">'+esc(a.text)+'</div><div style="font-size:10px;color:var(--dim);margin-top:1px">'+rel(a.time)+'</div></div></div>';});}
+  return h;
+}
+
+function pageLeads(){
+  var fl=filterInd==='all'?leads:leads.filter(function(l){return l.ind===filterInd;});
+  fl=[].concat(fl).sort(function(a,b){return b.added-a.added;});
+  var h='<div class="chips">';
+  ['all','pest','solar','poker'].forEach(function(f){
+    var on=filterInd===f;var col=f==='all'?'var(--acc)':(IND[f]?IND[f].color:'var(--acc)');var soft=f==='all'?'var(--acc-soft)':(IND[f]?IND[f].soft:'var(--acc-soft)');
+    h+='<button class="chip" onclick="setFilt(\''+f+'\')" style="'+(on?'border-color:'+col+';background:'+soft+';color:'+col+';font-weight:700;':'')+'">'+(f==='all'?'All':(IND[f].emoji+' '+IND[f].label))+'</button>';
+  });
+  h+='</div>';
+  if(!fl.length){h+=emptyState(filterInd==='all'?'👥':(IND[filterInd]?IND[filterInd].emoji:'👥'),'No leads yet',filterInd==='all'?'Add your first lead manually or let the scanner bring them in.':'No '+(IND[filterInd]?IND[filterInd].label:'')+' leads yet.',filterInd==='all'?'+ Add Lead':null,'openSh()');}
+  else{h+='<div style="font-size:11px;color:var(--sub);margin-bottom:12px">'+fl.length+' lead'+(fl.length!==1?'s':'')+'</div>';fl.forEach(function(l){h+=leadCard(l);});}
+  return h;
+}
+
+function pageScanner(){
+  var h='<div class="sec" style="margin-top:0">Bot Config</div><div class="card cp">';
+  [['Bot Token','8616974859:AAGh•••••••••••'],['Group ID',GRP],['Scanner','~/Desktop/bug-leads/scanner.js'],['Rate Limit','1.2s queue · backoff on 429'],['Markets','OC Pest · SoCal Solar · US Poker'],['Status','● Connected']].forEach(function(r){
+    h+='<div class="srcr" style="padding:8px 0"><span style="font-size:11px;color:var(--sub)">'+r[0]+'</span><span style="font-family:\'SF Mono\',monospace;font-size:11px;color:'+(r[0]==='Status'?'var(--acc)':'var(--text)')+';text-align:right;margin-left:10px;word-break:break-all">'+esc(r[1])+'</span></div>';
+  });
+  h+='</div><div class="hgrid">';
+  ['pest','solar','poker'].forEach(function(k){var i=IND[k];var cnt=leads.filter(function(l){return l.ind===k;}).length;var nw=leads.filter(function(l){return l.ind===k&&l.st==='new';}).length;h+='<div class="hc" style="background:'+i.soft+';border:0.5px solid '+i.color+'33"><div style="font-size:22px;margin-bottom:4px">'+i.emoji+'</div><div style="font-size:22px;font-weight:800;color:'+i.dark+';letter-spacing:-1px;font-variant-numeric:tabular-nums">'+cnt+'</div>'+(nw?'<div style="font-size:10px;font-weight:700;color:'+i.color+';margin-top:3px">'+nw+' new</div>':'<div style="font-size:10px;color:var(--dim);margin-top:3px">—</div>')+'</div>';});
+  h+='</div><div class="sec">Bugs Fixed</div>';
+  FIXES.forEach(function(f){h+='<div class="fix" style="border:0.5px solid '+(f.ok?'rgba(0,214,143,0.2)':'rgba(232,149,10,0.2)')+'"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px"><div style="font-size:12px;font-weight:700;line-height:1.4;flex:1">'+esc(f.title)+'</div><span class="fixtag" style="background:'+(f.ok?'rgba(0,214,143,0.1)':'rgba(232,149,10,0.1)')+';color:'+(f.ok?'var(--acc)':'var(--amber)')+'">'+( f.ok?'✓ Fixed':'⚠ Todo')+'</span></div><div style="font-size:11px;color:var(--dim);margin-bottom:3px"><b style="color:var(--sub)">Before:</b> '+esc(f.before)+'</div><div style="font-size:11px;color:'+(f.ok?'var(--acc)':'var(--amber)')+'"><b>Fix:</b> '+esc(f.after)+'</div>'+(f.impact?'<div style="font-size:10px;font-weight:700;color:var(--dim);margin-top:4px">'+f.impact+'</div>':'')+'</div>';});
+  h+='<div class="sec">Sources</div><div class="card" style="padding:4px 16px">';
+  SOURCES.forEach(function(s,i){var col=s.st==='active'?'var(--acc)':s.st==='error'?'var(--red)':'var(--dim)';var tx=s.st==='active'?'● LIVE':s.st==='error'?'✕ ERR':'○ IDLE';h+='<div class="srcr"'+(i===SOURCES.length-1?' style="border-bottom:none"':'')+' ><div><div style="font-size:13px;font-weight:500">'+esc(s.n)+'</div><div style="font-size:11px;color:var(--dim);margin-top:1px">'+s.rate+' · '+IND[s.ind].emoji+'</div></div><div style="text-align:right"><div style="font-size:11px;font-weight:700;font-family:\'SF Mono\',monospace;color:'+col+'">'+tx+'</div></div></div>';});
+  h+='</div>';return h;
+}
+
+function pageConfig(){
+  var h='<div class="sec" style="margin-top:0">Auto-Responders · Telegram</div>';
+  ['pest','solar','poker'].forEach(function(ind){var cfg=AR[ind];var i=IND[ind];h+='<div class="ar-card"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:22px">'+i.emoji+'</span><div><div style="font-size:13px;font-weight:700">'+i.label+'</div><div style="font-size:11px;color:var(--sub)">'+(cfg.on?'Delay: '+cfg.delay:'Disabled')+'</div></div></div><div class="tgl" onclick="togAr(\''+ind+'\')" style="background:'+(cfg.on?'var(--acc)':'rgba(255,255,255,0.1)')+'"><div class="tth" style="left:'+(cfg.on?22:2)+'px"></div></div></div><textarea style="resize:none;line-height:1.55;min-height:80px;font-size:13px;opacity:'+(cfg.on?1:0.5)+'" rows="4" '+(cfg.on?'':'disabled ')+'onchange="updMsg(\''+ind+'\',this.value)">'+esc(cfg.msg)+'</textarea><div style="font-size:10px;color:var(--dim);margin-top:6px">{name} = first name · Group: <span style="font-family:\'SF Mono\',monospace">'+GRP+'</span></div></div>';});
+  h+='<div class="sec">Scanner Webhook</div><div class="card cp"><div style="font-size:12px;color:var(--sub);margin-bottom:10px">Add to scanner.js after each lead is found:</div><div class="code"><div style="color:var(--dim)">// 1.2s queue prevents Telegram 429s</div><div style="color:#9cdcfe">await queue.add(() =&gt; fetch(\'/api/lead\', {</div><div style="padding-left:16px;color:#ce9178">body: JSON.stringify({</div><div style="padding-left:32px;color:#ce9178">name, phone, industry,</div><div style="padding-left:32px;color:#ce9178">source, score, snippet</div><div style="padding-left:16px;color:#ce9178">})</div><div style="color:#9cdcfe">}));</div></div></div>';
+  return h;
+}
+
 function toggleEx(id){expanded=(expanded===id?null:id);render();}
 function setFilt(f){filterInd=f;render();}
 function setSt(id,st){var l=leads.find(function(x){return x.id===id;});leads=leads.map(function(x){return x.id===id?Object.assign({},x,{st:st}):x;});if(l)addAct(l.name+' → '+st,'update');save();render();}
+function delLead(id){leads=leads.filter(function(x){return x.id!==id;});expanded=null;save();render();}
 function togAr(ind){AR[ind].on=!AR[ind].on;save();render();}
 function updMsg(ind,msg){AR[ind].msg=msg;save();}
 function openSh(){document.getElementById('sh').classList.add('open');}
 function closeSh(){document.getElementById('sh').classList.remove('open');}
 document.getElementById('sh-bg').addEventListener('click',closeSh);
-document.getElementById('sh-add').addEventListener('click',function(){var name=document.getElementById('fn').value.trim();if(!name)return;var ind=document.getElementById('fi').value;var l={id:uid(),name:name,phone:document.getElementById('fp').value.trim(),ind:ind,src:document.getElementById('fsrc').value,st:document.getElementById('fst').value,score:parseInt(document.getElementById('fsc').value)||Math.floor(Math.random()*30+60),quote:document.getElementById('fq').value.trim(),added:Date.now()};leads.unshift(l);addAct('New lead: '+l.name+' ('+IND[l.ind].label+') score '+l.score,'success');if(AR[l.ind]&&AR[l.ind].on){tgSent++;addAct('Auto-responder queued → '+GRP,'telegram');}save();closeSh();document.getElementById('fn').value='';document.getElementById('fp').value='';document.getElementById('fsc').value='';document.getElementById('fq').value='';render();});
-function simScan(){var opts=[{name:'r/homeowners user',ind:'pest',src:'Reddit r/homeowners',score:74,quote:'"Spider problem getting bad, need exterminator"'},{name:'r/solar commenter',ind:'solar',src:'Reddit r/solar',score:89,quote:'"Edison bill is insane, is solar worth it in SoCal?"'},{name:'r/onlinepoker user',ind:'poker',src:'Reddit r/onlinepoker',score:65,quote:'"Best real money poker app in California?"'},{name:'r/pestcontrol user',ind:'pest',src:'Reddit r/pestcontrol',score:82,quote:'"Confirmed bed bugs, need professional help ASAP"'}];var p=opts[Math.floor(Math.random()*opts.length)];var l=Object.assign({},p,{id:uid(),st:'new',phone:'',added:Date.now()});leads.unshift(l);addAct('Scanner: '+l.quote.slice(1,45)+'... ('+IND[l.ind].label+')','scan');if(AR[l.ind]&&AR[l.ind].on){tgSent++;addAct('Auto-responder queued → '+GRP,'telegram');}save();render();}
+document.getElementById('sh-add').addEventListener('click',function(){
+  var name=document.getElementById('fn').value.trim();if(!name)return;
+  var ind=document.getElementById('fi').value;
+  var l={id:uid(),name:name,phone:document.getElementById('fp').value.trim(),ind:ind,src:document.getElementById('fsrc').value,st:document.getElementById('fst').value,score:parseInt(document.getElementById('fsc').value)||Math.floor(Math.random()*25+65),quote:document.getElementById('fq').value.trim(),added:Date.now()};
+  leads.unshift(l);
+  addAct('New lead: '+l.name+' ('+IND[l.ind].label+') score '+l.score,'success');
+  if(AR[l.ind]&&AR[l.ind].on){tgSent++;addAct('Auto-responder queued → '+GRP,'telegram');}
+  save();closeSh();
+  document.getElementById('fn').value='';document.getElementById('fp').value='';document.getElementById('fsc').value='';document.getElementById('fq').value='';
+  render();
+});
+
 function render(){var pg=document.getElementById('pg');if(curTab==='feed')pg.innerHTML=pageFeed();else if(curTab==='leads')pg.innerHTML=pageLeads();else if(curTab==='scanner')pg.innerHTML=pageScanner();else pg.innerHTML=pageConfig();}
 document.getElementById('tabs').addEventListener('click',function(e){var btn=e.target.closest('.tb');if(!btn)return;curTab=btn.dataset.t;expanded=null;document.querySelectorAll('.tb').forEach(function(t){t.classList.remove('on');});btn.classList.add('on');render();});
 load();render();
 </script>
 </body>
 </html>
+
